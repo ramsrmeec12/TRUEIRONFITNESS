@@ -1,0 +1,149 @@
+import { useEffect, useState } from "react";
+import { collection, getDocs, doc, updateDoc } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
+import { db } from "../firebase";
+
+export default function ViewClients() {
+  const [clients, setClients] = useState([]);
+  const [editingClient, setEditingClient] = useState(null);
+  const navigate = useNavigate();
+
+  const fetchClients = async () => {
+    const snapshot = await getDocs(collection(db, "clients"));
+    const clientList = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    setClients(clientList);
+  };
+
+  useEffect(() => {
+    fetchClients();
+  }, []);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setEditingClient(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleUpdate = async () => {
+    try {
+      const clientRef = doc(db, "clients", editingClient.id);
+      const { id, ...updatedData } = editingClient;
+      await updateDoc(clientRef, updatedData);
+      setEditingClient(null);
+      fetchClients();
+      alert("Client updated successfully!");
+    } catch (error) {
+      console.error("Error updating client:", error);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-100 p-6">
+      <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">Client List</h1>
+      <div className="overflow-x-auto shadow-md rounded-xl bg-white p-4">
+        <table className="min-w-full text-sm text-left text-gray-700">
+          <thead className="text-xs uppercase bg-slate-200">
+            <tr>
+              <th className="px-4 py-3">Name</th>
+              <th className="px-4 py-3">Phone</th>
+              <th className="px-4 py-3">Email</th>
+              <th className="px-4 py-3">DOB</th>
+              <th className="px-4 py-3">Gender</th>
+              <th className="px-4 py-3">Type</th>
+              <th className="px-4 py-3">Height</th>
+              <th className="px-4 py-3">Weight</th>
+              <th className="px-4 py-3">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {clients.map((client) => (
+              <tr
+                key={client.id}
+                className="border-t hover:bg-slate-50 cursor-pointer"
+                onClick={() => navigate(`/client/${client.id}`)}
+              >
+                <td className="px-4 py-2">{client.name}</td>
+                <td className="px-4 py-2">{client.phone}</td>
+                <td className="px-4 py-2">{client.email}</td>
+                <td className="px-4 py-2">{client.dob}</td>
+                <td className="px-4 py-2">{client.gender}</td>
+                <td className="px-4 py-2">{client.transformationType}</td>
+                <td className="px-4 py-2">{client.height} cm</td>
+                <td className="px-4 py-2">{client.weight} kg</td>
+                <td className="px-4 py-2">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setEditingClient(client);
+                    }}
+                    className="bg-blue-600 hover:bg-blue-700 text-white text-xs px-3 py-1 rounded"
+                  >
+                    Edit
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Edit Modal */}
+      {editingClient && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-lg">
+            <h2 className="text-xl font-bold mb-4">Edit Client</h2>
+            <div className="grid grid-cols-2 gap-4">
+              {["name", "phone", "email", "dob", "height", "weight"].map((field) => (
+                <input
+                  key={field}
+                  name={field}
+                  value={editingClient[field]}
+                  onChange={handleInputChange}
+                  placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
+                  className="border rounded px-3 py-2"
+                />
+              ))}
+              <select
+                name="gender"
+                value={editingClient.gender}
+                onChange={handleInputChange}
+                className="border rounded px-3 py-2"
+              >
+                <option value="">Gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+              </select>
+              <select
+                name="transformationType"
+                value={editingClient.transformationType}
+                onChange={handleInputChange}
+                className="border rounded px-3 py-2"
+              >
+                <option value="">Transformation Type</option>
+                <option value="fatloss">Fat Loss</option>
+                <option value="musclegain">Muscle Gain</option>
+                <option value="bodyrecomp">Body Recomp</option>
+              </select>
+            </div>
+            <div className="mt-4 flex justify-end gap-3">
+              <button
+                onClick={() => setEditingClient(null)}
+                className="bg-gray-300 hover:bg-gray-400 px-4 py-2 rounded"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleUpdate}
+                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
+              >
+                Save Changes
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
