@@ -12,9 +12,11 @@ export default function AddClient() {
     dob: "",
     gender: "",
     transformationType: "",
+    dietType: "",
     height: "",
     weight: "",
   });
+
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -70,10 +72,18 @@ export default function AddClient() {
           </select>
           <select name="transformationType" value={formData.transformationType} onChange={handleChange} className="input" required>
             <option value="">Transformation Type</option>
-            <option value="fatloss">Fat Loss</option>
-            <option value="musclegain">Muscle Gain</option>
-            <option value="bodyrecomp">Body Recomp</option>
+            <option value="weight loss">Weight Loss</option>
+            <option value="weight gain">Weight Gain</option>
+            <option value="body recomposition">Body Recomposition</option>
+            <option value="competition preparation">Competition Preparation</option>
           </select>
+
+          <select name="dietType" value={formData.dietType || ""} onChange={handleChange} className="input" required>
+            <option value="">Diet Type</option>
+            <option value="veg">Veg</option>
+            <option value="nonveg">Non-Veg</option>
+          </select>
+
           <input name="height" type="number" placeholder="Height (cm)" value={formData.height} onChange={handleChange} className="input" required />
           <input name="weight" type="number" placeholder="Weight (kg)" value={formData.weight} onChange={handleChange} className="input" required />
           <button type="submit" className="col-span-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-xl transition-all">

@@ -54,7 +54,10 @@ export default function ViewClients() {
               <th className="px-4 py-3">Type</th>
               <th className="px-4 py-3">Height</th>
               <th className="px-4 py-3">Weight</th>
+              <th className="px-4 py-3">Diet</th>
+              <th className="px-4 py-3">BMI</th>
               <th className="px-4 py-3">Actions</th>
+
             </tr>
           </thead>
           <tbody>
@@ -72,6 +75,22 @@ export default function ViewClients() {
                 <td className="px-4 py-2">{client.transformationType}</td>
                 <td className="px-4 py-2">{client.height} cm</td>
                 <td className="px-4 py-2">{client.weight} kg</td>
+                <td className="px-4 py-2 capitalize">{client.dietType || "N/A"}</td>
+                <td className="px-4 py-2">
+                  {client.height && client.weight ? (() => {
+                    const bmi = client.weight / Math.pow(client.height / 100, 2);
+                    const rounded = bmi.toFixed(1);
+                    let color = "text-gray-700";
+                    if (bmi < 18.5) color = "text-blue-500";
+                    else if (bmi < 25) color = "text-green-600";
+                    else if (bmi < 30) color = "text-orange-500";
+                    else color = "text-red-600";
+                    return <span className={color}>{rounded}</span>;
+                  })() : "N/A"}
+                </td>
+
+
+
                 <td className="px-4 py-2">
                   <button
                     onClick={(e) => {
@@ -126,6 +145,17 @@ export default function ViewClients() {
                 <option value="musclegain">Muscle Gain</option>
                 <option value="bodyrecomp">Body Recomp</option>
               </select>
+              <select
+                name="dietType"
+                value={editingClient.dietType || ""}
+                onChange={handleInputChange}
+                className="border rounded px-3 py-2"
+              >
+                <option value="">Diet Type</option>
+                <option value="veg">Veg</option>
+                <option value="nonveg">Non-Veg</option>
+              </select>
+
             </div>
             <div className="mt-4 flex justify-end gap-3">
               <button
@@ -140,6 +170,7 @@ export default function ViewClients() {
               >
                 Save Changes
               </button>
+              
             </div>
           </div>
         </div>

@@ -5,8 +5,6 @@ import { db } from "../firebase";
 export default function AddWorkout() {
   const [workout, setWorkout] = useState({
     name: "",
-    sets: "",
-    reps: "",
     muscle: "",
     equipment: "",
   });
@@ -21,7 +19,7 @@ export default function AddWorkout() {
     try {
       await addDoc(collection(db, "workouts"), workout);
       alert("Workout added successfully!");
-      setWorkout({ name: "", sets: "", reps: "", muscle: "", equipment: "" });
+      setWorkout({ name: "", muscle: "", equipment: "" });
     } catch (err) {
       console.error("Error adding workout:", err);
     }
@@ -44,24 +42,7 @@ export default function AddWorkout() {
             className="input"
             required
           />
-          <input
-            name="sets"
-            value={workout.sets}
-            onChange={handleChange}
-            type="number"
-            placeholder="Sets"
-            className="input"
-            required
-          />
-          <input
-            name="reps"
-            value={workout.reps}
-            onChange={handleChange}
-            type="number"
-            placeholder="Reps"
-            className="input"
-            required
-          />
+
           <select
             name="muscle"
             value={workout.muscle}
@@ -77,6 +58,7 @@ export default function AddWorkout() {
             <option value="arms">Arms</option>
             <option value="core">Core</option>
           </select>
+
           <input
             name="equipment"
             value={workout.equipment}
@@ -84,6 +66,7 @@ export default function AddWorkout() {
             type="text"
             placeholder="Equipment (e.g., Dumbbells)"
             className="input"
+            required
           />
 
           <button

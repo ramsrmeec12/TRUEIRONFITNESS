@@ -9,6 +9,9 @@ import AddWorkout from "./pages/AddWorkout";
 import ClientProfile from "./pages/ClientProfile";
 import Home from "./pages/Home";
 import TrainerLogin from "./pages/TrainerLogin";
+import EssentialsManager from "./pages/Essentials";
+
+
 
 
 function App() {
@@ -25,6 +28,9 @@ function App() {
         <Route path="/client-dashboard" element={<ClientDashboard />} />
         <Route path="/client/:id" element={<ClientProfile />} />
         <Route path="/trainer-login" element={<TrainerLogin></TrainerLogin>}></Route>
+        <Route path="/essentials" element={<EssentialsManager />} />
+        
+
       </Routes>
     </BrowserRouter>
   );
