@@ -68,6 +68,8 @@ export default function ClientDashboard() {
       completedFoods: type === "food" ? newCompleted : completedFoods,
       completedWorkouts: type === "workout" ? newCompleted : completedWorkouts,
     };
+    completedWorkouts.includes(itemLabel)
+
 
     await setDoc(doc(db, "client_progress", `${email}_${today}`), data);
 
@@ -126,35 +128,35 @@ export default function ClientDashboard() {
   };
 
   const renderWorkoutSection = () => {
-    const workouts = clientData.assignedWorkout?.list || [];
+    const dayWiseWorkouts = clientData.assignedWorkoutPerDay || {};
+    if (!Object.keys(dayWiseWorkouts).length) return <p>No workout plan assigned.</p>;
 
-    if (!workouts.length) return <p>No workout assigned.</p>;
+    return Object.entries(dayWiseWorkouts).map(([day, workouts], idx) => {
+      if (!Array.isArray(workouts) || workouts.length === 0) return null;
 
-    const grouped = workouts.reduce((acc, curr) => {
-      const group = curr.muscle || "Other";
-      if (!acc[group]) acc[group] = [];
-      acc[group].push(curr);
-      return acc;
-    }, {});
-
-    return Object.entries(grouped).map(([muscle, groupList], idx) => (
-      <div key={idx} className="mb-4">
-        <h4 className="font-semibold text-blue-700 mb-2">{muscle}</h4>
-        <ul className="ml-4 space-y-2">
-          {groupList.map((w, i) => (
-            <li key={i} className="flex items-center gap-3">
-              <input
-                type="checkbox"
-                checked={completedWorkouts.includes(w.name)}
-                onChange={() => handleCheckbox("workout", w.name)}
-              />
-              {w.name} ({w.sets || 3}x{w.reps || 10})
-            </li>
-          ))}
-        </ul>
-      </div>
-    ));
+      return (
+        <div key={idx} className="mb-4">
+          <h4 className="font-semibold text-indigo-700 mb-2">{day}</h4>
+          <ul className="ml-4 space-y-2">
+            {workouts.map((w, i) => {
+              const label = `${day}_${w.name}`;
+              return (
+                <li key={i} className="flex items-center gap-3">
+                  <input
+                    type="checkbox"
+                    checked={completedWorkouts.includes(label)}
+                    onChange={() => handleCheckbox("workout", label)}
+                  />
+                  {w.name} ({w.sets || 3}x{w.reps || 10})
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      );
+    });
   };
+
 
   const calculateBMI = () => {
     if (clientData?.height && clientData?.weight) {

@@ -22,9 +22,13 @@ export default function ClientProfile() {
   const [essentialsList, setEssentialsList] = useState([]);
   const [assignedFood, setAssignedFood] = useState({ Breakfast: [], Lunch: [], Dinner: [] });
   const [assignedEssentials, setAssignedEssentials] = useState({ Breakfast: [], Lunch: [], Dinner: [] });
-  const [selectedMuscle, setSelectedMuscle] = useState("");
-  const [workoutOptions, setWorkoutOptions] = useState([]);
-  const [assignedWorkout, setAssignedWorkout] = useState([]);
+  const [selectedMusclesPerDay, setSelectedMusclesPerDay] = useState({});
+  const [assignedWorkoutsPerDay, setAssignedWorkoutsPerDay] = useState({});
+  const [workoutOptionsMap, setWorkoutOptionsMap] = useState({});
+
+
+
+
   const [history, setHistory] = useState([]);
   const [selectedDate, setSelectedDate] = useState("");
 
@@ -37,38 +41,67 @@ export default function ClientProfile() {
       const clientData = clientSnap.data();
       setClient(clientData);
 
+
+      // Load assigned food
+      if (clientData.assignedFood) {
+        setAssignedFood(clientData.assignedFood);
+      }
+
+      // Load assigned essentials
+      if (clientData.assignedEssentials) {
+        setAssignedEssentials(clientData.assignedEssentials);
+      }
+
+      // Load assigned workouts per day
+      if (clientData.assignedWorkoutPerDay) {
+        setAssignedWorkoutsPerDay(clientData.assignedWorkoutPerDay);
+
+        const muscleMap = {};
+        const optionsMap = {};
+
+        for (const [day, workouts] of Object.entries(clientData.assignedWorkoutPerDay)) {
+          if (workouts.length > 0) {
+            const muscle = workouts[0].muscle || "";
+            if (muscle) {
+              muscleMap[day] = muscle;
+              const options = await fetchWorkoutsByMuscle(muscle);
+              optionsMap[day] = options;
+            }
+          }
+        }
+
+        setSelectedMusclesPerDay(muscleMap);
+        setWorkoutOptionsMap(optionsMap);
+      }
+
+      // Load all foods
       const foodSnap = await getDocs(collection(db, "foods"));
       const allFoods = foodSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       setFoodItems(allFoods);
 
+      // Load essentials list
       const essentialSnap = await getDocs(collection(db, "essentials"));
       const allEssentials = essentialSnap.docs.map(doc => doc.data().name);
       setEssentialsList(allEssentials);
 
-      if (clientData.assignedFood) setAssignedFood(clientData.assignedFood);
-      if (clientData.assignedEssentials) setAssignedEssentials(clientData.assignedEssentials);
-      if (clientData.assignedWorkout) {
-        setAssignedWorkout(clientData.assignedWorkout.list || []);
-        setSelectedMuscle(clientData.assignedWorkout.muscle || "");
-      }
-
-      const progressSnap = await getDocs(query(collection(db, "client_progress"), where("clientEmail", "==", clientData.email)));
+      // Load client progress history
+      const progressSnap = await getDocs(
+        query(collection(db, "client_progress"), where("clientEmail", "==", clientData.email))
+      );
       const historyData = progressSnap.docs.map(doc => doc.data());
       setHistory(historyData);
     };
+
     fetchData();
   }, [id]);
 
-  useEffect(() => {
-    const fetchWorkouts = async () => {
-      if (!selectedMuscle) return;
-      const q = query(collection(db, "workouts"), where("muscle", "==", selectedMuscle));
-      const snap = await getDocs(q);
-      const results = snap.docs.map(doc => ({ id: doc.id, ...doc.data(), sets: 3, reps: 10 }));
-      setWorkoutOptions(results);
-    };
-    fetchWorkouts();
-  }, [selectedMuscle]);
+  const fetchWorkoutsByMuscle = async (muscle) => {
+    if (!muscle) return [];
+    const q = query(collection(db, "workouts"), where("muscle", "==", muscle));
+    const snap = await getDocs(q);
+    return snap.docs.map(doc => ({ id: doc.id, ...doc.data(), sets: 3, reps: 10 }));
+  };
+
 
   const handleSelectFood = (meal, foodId) => {
     const food = foodItems.find(f => f.id === foodId);
@@ -94,33 +127,18 @@ export default function ClientProfile() {
     setAssignedFood(updated);
   };
 
-  const handleToggleWorkout = (id) => {
-    const exists = assignedWorkout.find(w => w.id === id);
-    if (exists) {
-      setAssignedWorkout(prev => prev.filter(w => w.id !== id));
-    } else {
-      const w = workoutOptions.find(w => w.id === id);
-      setAssignedWorkout(prev => [...prev, { ...w, sets: 3, reps: 10 }]);
-    }
-  };
 
-  const updateWorkoutField = (index, field, value) => {
-    const updated = [...assignedWorkout];
-    updated[index][field] = value;
-    setAssignedWorkout(updated);
-  };
 
   const savePlan = async () => {
     await updateDoc(doc(db, "clients", id), {
       assignedFood,
       assignedEssentials,
-      assignedWorkout: {
-        muscle: selectedMuscle,
-        list: assignedWorkout,
-      },
+      assignedWorkoutPerDay: assignedWorkoutsPerDay,
+      selectedMusclesPerDay,
     });
     alert("✅ Plan saved!");
   };
+
 
   const getTotalCaloriesAndMacros = () => {
     let calories = 0, protein = 0, carbs = 0, fat = 0;
@@ -269,97 +287,121 @@ export default function ClientProfile() {
       </div>
 
       {/* Workout Section */}
-      <div className="bg-white p-5 rounded-xl shadow max-w-3xl mx-auto mb-6">
-        <h3 className="text-xl font-semibold mb-3 text-indigo-600">🏋️ Assign Workout Plan</h3>
+      <div className="bg-white p-5 rounded-xl shadow max-w-4xl mx-auto mb-6">
+        <h3 className="text-xl font-semibold mb-5 text-indigo-600">🏋️ Assign Workout Plan (By Day)</h3>
 
-        {/* Muscle Group Selector */}
-        <select
-          value={selectedMuscle}
-          onChange={(e) => setSelectedMuscle(e.target.value)}
-          className="w-full border p-2 rounded mb-4"
-        >
-          <option value="">Select Muscle Group</option>
-          {muscleGroups.map(muscle => (
-            <option key={muscle} value={muscle}>{muscle}</option>
-          ))}
-        </select>
+        {["Day 1", "Day 2", "Day 3", "Day 4", "Day 5", "Day 6"].map((day) => {
+          const selectedMuscle = selectedMusclesPerDay[day] || "";
+          const assignedWorkouts = assignedWorkoutsPerDay[day] || [];
+          const workoutOptions = workoutOptionsMap[day] || [];
 
-        {/* Workout Options for Selected Muscle */}
-        {selectedMuscle && workoutOptions.length > 0 && (
-          <div className="space-y-3 mb-6">
-            {workoutOptions.map((w, index) => {
-              const checked = assignedWorkout.some(item => item.id === w.id);
-              const assigned = assignedWorkout.find(item => item.id === w.id);
-              return (
-                <div key={w.id} className="flex items-center justify-between">
-                  <label className="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      checked={checked}
-                      onChange={() => handleToggleWorkout(w.id)}
-                    />
-                    {w.name} ({w.equipment || "No Equipment"})
-                  </label>
-                  {checked && (
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="number"
-                        value={assigned?.sets || 3}
-                        onChange={(e) => updateWorkoutField(index, "sets", +e.target.value)}
-                        className="w-14 border p-1 rounded text-sm"
-                      />
-                      x
-                      <input
-                        type="number"
-                        value={assigned?.reps || 10}
-                        onChange={(e) => updateWorkoutField(index, "reps", +e.target.value)}
-                        className="w-14 border p-1 rounded text-sm"
-                      />
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        )}
+          const handleToggle = (w) => {
+            setAssignedWorkoutsPerDay(prev => {
+              const current = prev[day] || [];
+              const exists = current.find(item => item.id === w.id);
+              return {
+                ...prev,
+                [day]: exists
+                  ? current.filter(item => item.id !== w.id)
+                  : [...current, { ...w, sets: 3, reps: 10, muscle: selectedMuscle }]
+              };
+            });
+          };
 
-        {/* Assigned Workout Summary - Always Visible */}
-        {assignedWorkout.length > 0 && (
-  <div className="mt-6 border-t pt-4">
-    <h4 className="text-lg font-semibold mb-4 text-indigo-700">📝 Assigned Workouts</h4>
-    {muscleGroups.map((muscle) => {
-      const workoutsForMuscle = assignedWorkout.filter((w) => w.muscle === muscle);
-      if (workoutsForMuscle.length === 0) return null;
 
-      return (
-        <div key={muscle} className="mb-4">
-          <h5 className="text-md font-bold mb-2 capitalize text-slate-800">{muscle}</h5>
-          <ul className="space-y-2 text-sm">
-            {workoutsForMuscle.map((w) => (
-              <li
-                key={w.id}
-                className="flex justify-between items-center bg-slate-100 px-3 py-2 rounded"
+          const updateSetRep = (workoutId, field, value) => {
+            const updated = assignedWorkouts.map(w => {
+              if (w.id === workoutId) {
+                return { ...w, [field]: value };
+              }
+              return w;
+            });
+            setAssignedWorkoutsPerDay(prev => ({ ...prev, [day]: updated }));
+          };
+
+          const handleMuscleChange = async (muscle) => {
+            setSelectedMusclesPerDay(prev => ({ ...prev, [day]: muscle }));
+            const options = await fetchWorkoutsByMuscle(muscle);
+            setWorkoutOptionsMap(prev => ({ ...prev, [day]: options }));
+          };
+
+          return (
+            <div key={day} className="mb-6 border-t pt-4">
+              <h4 className="text-lg font-semibold text-gray-800 mb-3">{day}</h4>
+
+              <select
+                value={selectedMuscle}
+                onChange={(e) => handleMuscleChange(e.target.value)}
+                className="w-full border p-2 rounded mb-3"
               >
-                <div>
-                  <span className="font-medium">{w.name}</span> ({w.equipment || "No Equipment"}) –{" "}
-                  {w.sets || 3} sets x {w.reps || 10} reps
-                </div>
-                <button
-                  className="text-red-500 text-sm"
-                  onClick={() => handleToggleWorkout(w.id)}
-                >
-                  ❌ Remove
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
-      );
-    })}
-  </div>
-)}
+                <option value="">Select Muscle Group</option>
+                {muscleGroups.map(muscle => (
+                  <option key={muscle} value={muscle}>{muscle}</option>
+                ))}
+              </select>
 
+              {selectedMuscle && (
+                <div className="space-y-3 mb-3">
+                  {workoutOptions.map((w, idx) => {
+                    const checked = assignedWorkouts.some(item => item.id === w.id);
+                    const assigned = assignedWorkouts.find(item => item.id === w.id);
+                    return (
+                      <div key={w.id} className="flex items-center justify-between">
+                        <label className="flex items-center gap-2">
+                          <input
+                            type="checkbox"
+                            checked={checked}
+                            onChange={() => handleToggle(w)}
+                          />
+                          {w.name} ({w.equipment || "No Equipment"})
+                        </label>
+                        {checked && (
+                          <div className="flex gap-2 items-center">
+                            <input
+                              type="number"
+                              value={assigned?.sets || 3}
+                              onChange={(e) => updateSetRep(w.id, "sets", +e.target.value)}
+                              className="w-14 border p-1 rounded text-sm"
+                            />
+                            x
+                            <input
+                              type="number"
+                              value={assigned?.reps || 10}
+                              onChange={(e) => updateSetRep(w.id, "reps", +e.target.value)}
+                              className="w-14 border p-1 rounded text-sm"
+                            />
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+
+              {assignedWorkouts.length > 0 && (
+                <div className="bg-slate-100 p-3 rounded">
+                  <h5 className="text-md font-bold mb-2 text-indigo-700">Assigned Workouts</h5>
+                  <ul className="space-y-2 text-sm">
+                    {assignedWorkouts.map((w, i) => (
+                      <li key={w.id} className="flex justify-between items-center">
+                        <span>
+                          {w.name} – {w.sets || 3} x {w.reps || 10} reps
+                        </span>
+                        <button
+                          onClick={() => handleToggle(w)}
+                          className="text-red-500 text-sm"
+                        >❌</button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          );
+        })}
       </div>
+
+
 
 
       <div className="text-center mb-12">
@@ -373,10 +415,8 @@ export default function ClientProfile() {
       <div className="text-center mb-8">
         <button
           onClick={() =>
-            generateDietPlanPdf(client, assignedFood, assignedEssentials, {
-              muscle: selectedMuscle,
-              list: assignedWorkout
-            })
+            generateDietPlanPdf(client, assignedFood, assignedEssentials, assignedWorkoutsPerDay)
+
           }
           className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-xl"
         >

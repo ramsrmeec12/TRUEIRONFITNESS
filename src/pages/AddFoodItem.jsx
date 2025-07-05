@@ -9,7 +9,7 @@ export default function AddFoodItem() {
     carbs: "",
     fat: "",
     calories: 0,
-    category: "",
+    
   });
 
   const calculateCalories = (protein, carbs, fat) => {
@@ -59,20 +59,6 @@ export default function AddFoodItem() {
             className="input"
             required
           />
-          <select
-            name="category"
-            value={food.category}
-            onChange={handleChange}
-            className="input"
-            required
-          >
-            <option value="">Select Category</option>
-            <option value="Breakfast">Breakfast</option>
-            <option value="Lunch">Lunch</option>
-            <option value="Dinner">Dinner</option>
-            <option value="Snacks">Snacks</option>
-            <option value="Pre-workout">Pre-workout</option>
-          </select>
           <input
             name="protein"
             value={food.protein}
