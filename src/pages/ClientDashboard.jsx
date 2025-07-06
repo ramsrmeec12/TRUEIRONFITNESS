@@ -5,9 +5,6 @@ import {
   query,
   where,
   getDocs,
-  doc,
-  setDoc,
-  getDoc,
 } from "firebase/firestore";
 import { getAuth, signOut } from "firebase/auth";
 import { db } from "../firebase";
@@ -18,8 +15,8 @@ function useQuery() {
 
 export default function ClientDashboard() {
   const [clientData, setClientData] = useState(null);
-  const [completedFoods, setCompletedFoods] = useState([]);
-  const [completedWorkouts, setCompletedWorkouts] = useState([]);
+  const mealOrder = ["Breakfast", "Lunch", "Dinner"];
+  const workoutDaysOrder = ["Day 1", "Day 2", "Day 3", "Day 4", "Day 5", "Day 6"];
   const queryParams = useQuery();
   const email = queryParams.get("email");
   const today = new Date().toISOString().split("T")[0];
@@ -33,48 +30,10 @@ export default function ClientDashboard() {
       if (docData) setClientData({ id: docData.id, ...docData.data() });
     };
 
-    const fetchProgress = async () => {
-      const ref = doc(db, "client_progress", `${email}_${today}`);
-      const snap = await getDoc(ref);
-      if (snap.exists()) {
-        setCompletedFoods(snap.data().completedFoods || []);
-        setCompletedWorkouts(snap.data().completedWorkouts || []);
-      }
-    };
-
     if (email) {
       fetchClient();
-      fetchProgress();
     }
   }, [email, today]);
-
-  const handleCheckbox = async (type, itemLabel) => {
-    const isCompleted =
-      type === "food"
-        ? completedFoods.includes(itemLabel)
-        : completedWorkouts.includes(itemLabel);
-
-    const newCompleted = type === "food"
-      ? isCompleted
-        ? completedFoods.filter(f => f !== itemLabel)
-        : [...completedFoods, itemLabel]
-      : isCompleted
-        ? completedWorkouts.filter(w => w !== itemLabel)
-        : [...completedWorkouts, itemLabel];
-
-    const data = {
-      clientEmail: email,
-      date: today,
-      completedFoods: type === "food" ? newCompleted : completedFoods,
-      completedWorkouts: type === "workout" ? newCompleted : completedWorkouts,
-    };
-    completedWorkouts.includes(itemLabel)
-
-
-    await setDoc(doc(db, "client_progress", `${email}_${today}`), data);
-
-    type === "food" ? setCompletedFoods(newCompleted) : setCompletedWorkouts(newCompleted);
-  };
 
   const handleLogout = async () => {
     try {
@@ -88,27 +47,20 @@ export default function ClientDashboard() {
   const renderFoodSection = () => {
     const foodData = clientData.assignedFood || {};
     const essentialsData = clientData.assignedEssentials || {};
-    const meals = Object.keys(foodData);
+
+    const meals = mealOrder.filter(meal => foodData[meal]); // Only keep defined meals
 
     if (meals.length === 0) return <p>No food plan assigned.</p>;
 
     return meals.map((meal, idx) => (
       <div key={idx} className="mb-6">
         <h4 className="font-semibold text-blue-700 mb-2">{meal}</h4>
-        <ul className="ml-4 space-y-2 mb-2">
-          {foodData[meal].map((food, i) => {
-            const label = `${meal}_${food.name}`;
-            return (
-              <li key={i} className="flex items-center gap-3">
-                <input
-                  type="checkbox"
-                  checked={completedFoods.includes(label)}
-                  onChange={() => handleCheckbox("food", label)}
-                />
-                {food.name} – {food.grams}g ({food.calories} kcal)
-              </li>
-            );
-          })}
+        <ul className="ml-4 space-y-2 mb-2 text-sm">
+          {foodData[meal].map((food, i) => (
+            <li key={i}>
+              {food.name} – {food.grams}g ({food.calories} kcal)
+            </li>
+          ))}
         </ul>
 
         <div className="ml-4">
@@ -116,9 +68,12 @@ export default function ClientDashboard() {
           {(essentialsData[meal]?.length > 0) ? (
             <ul className="list-disc list-inside text-sm text-gray-800 space-y-1">
               {essentialsData[meal].map((item, idx) => (
-                <li key={idx}>{item}</li>
+                <li key={idx}>
+                  {item.name} {item.dosage ? `– ${item.dosage}` : ""}
+                </li>
               ))}
             </ul>
+
           ) : (
             <p className="text-sm text-gray-500 ml-1">No essentials assigned.</p>
           )}
@@ -127,36 +82,32 @@ export default function ClientDashboard() {
     ));
   };
 
+
   const renderWorkoutSection = () => {
     const dayWiseWorkouts = clientData.assignedWorkoutPerDay || {};
-    if (!Object.keys(dayWiseWorkouts).length) return <p>No workout plan assigned.</p>;
 
-    return Object.entries(dayWiseWorkouts).map(([day, workouts], idx) => {
+    const sortedDays = workoutDaysOrder.filter(day => dayWiseWorkouts[day]);
+
+    if (!sortedDays.length) return <p>No workout plan assigned.</p>;
+
+    return sortedDays.map((day, idx) => {
+      const workouts = dayWiseWorkouts[day];
       if (!Array.isArray(workouts) || workouts.length === 0) return null;
 
       return (
         <div key={idx} className="mb-4">
           <h4 className="font-semibold text-indigo-700 mb-2">{day}</h4>
-          <ul className="ml-4 space-y-2">
-            {workouts.map((w, i) => {
-              const label = `${day}_${w.name}`;
-              return (
-                <li key={i} className="flex items-center gap-3">
-                  <input
-                    type="checkbox"
-                    checked={completedWorkouts.includes(label)}
-                    onChange={() => handleCheckbox("workout", label)}
-                  />
-                  {w.name} ({w.sets || 3}x{w.reps || 10})
-                </li>
-              );
-            })}
+          <ul className="ml-4 space-y-2 text-sm">
+            {workouts.map((w, i) => (
+              <li key={i}>
+                {w.name} ({w.sets || 3}x{w.reps || 10})
+              </li>
+            ))}
           </ul>
         </div>
       );
     });
   };
-
 
   const calculateBMI = () => {
     if (clientData?.height && clientData?.weight) {

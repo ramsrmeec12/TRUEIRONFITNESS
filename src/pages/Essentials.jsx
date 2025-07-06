@@ -11,9 +11,9 @@ import {
 export default function EssentialsManager() {
   const [essentials, setEssentials] = useState([]);
   const [newEssential, setNewEssential] = useState({
-    name: "",
-    dosage: ""
+    name: ""
   });
+
 
   const fetchEssentials = async () => {
     const snap = await getDocs(collection(db, "essentials"));
@@ -26,9 +26,10 @@ export default function EssentialsManager() {
   }, []);
 
   const handleAdd = async () => {
-    if (!newEssential.name || !newEssential.dosage) return alert("Fill all fields.");
+    if (!newEssential.name) return alert("Enter essential name.");
     await addDoc(collection(db, "essentials"), newEssential);
-    setNewEssential({ name: "", dosage: "" });
+    setNewEssential({ name: "" });
+    alert('Essential added successfully')
     fetchEssentials();
   };
 
@@ -50,13 +51,7 @@ export default function EssentialsManager() {
           value={newEssential.name}
           onChange={(e) => setNewEssential(prev => ({ ...prev, name: e.target.value }))}
         />
-        <input
-          type="text"
-          placeholder="Dosage (e.g., 1 tablet)"
-          className="w-full border p-2 rounded mb-3"
-          value={newEssential.dosage}
-          onChange={(e) => setNewEssential(prev => ({ ...prev, dosage: e.target.value }))}
-        />
+
         <button
           className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
           onClick={handleAdd}
@@ -71,9 +66,9 @@ export default function EssentialsManager() {
           {essentials.map(item => (
             <li key={item.id} className="bg-white p-3 rounded shadow flex justify-between items-center">
               <div>
-                <strong>{item.name}</strong><br />
-                <span className="text-sm text-gray-600">💊 Dosage: {item.dosage}</span>
+                <strong>{item.name}</strong>
               </div>
+
               <button
                 onClick={() => handleDelete(item.id)}
                 className="text-red-600 hover:underline"

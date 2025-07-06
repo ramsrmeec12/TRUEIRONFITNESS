@@ -29,8 +29,7 @@ export default function ClientProfile() {
 
 
 
-  const [history, setHistory] = useState([]);
-  const [selectedDate, setSelectedDate] = useState("");
+
 
   const meals = ["Breakfast", "Lunch", "Dinner"];
   const muscleGroups = ["chest", "back", "shoulders", "legs", "arms", "core"];
@@ -83,13 +82,6 @@ export default function ClientProfile() {
       const essentialSnap = await getDocs(collection(db, "essentials"));
       const allEssentials = essentialSnap.docs.map(doc => doc.data().name);
       setEssentialsList(allEssentials);
-
-      // Load client progress history
-      const progressSnap = await getDocs(
-        query(collection(db, "client_progress"), where("clientEmail", "==", clientData.email))
-      );
-      const historyData = progressSnap.docs.map(doc => doc.data());
-      setHistory(historyData);
     };
 
     fetchData();
@@ -160,7 +152,7 @@ export default function ClientProfile() {
   };
 
   const { calories, protein, carbs, fat } = getTotalCaloriesAndMacros();
-  const selectedEntry = history.find(entry => entry.date === selectedDate);
+
 
   if (!client) return <div className="p-10">Loading...</div>;
 
@@ -223,15 +215,28 @@ export default function ClientProfile() {
             <div className="text-sm mb-2">
               <strong>Essentials:</strong>{" "}
               {assignedEssentials[meal]?.length > 0 ? (
-                <div className="flex flex-wrap gap-2 mt-1">
+                <div className="flex flex-col gap-2 mt-1">
                   {assignedEssentials[meal].map((item, idx) => (
-                    <span
-                      key={idx}
-                      className="bg-green-200 text-green-800 px-2 py-1 rounded-full text-xs flex items-center"
-                    >
-                      {item}
+                    <div key={idx} className="flex items-center gap-2">
+                      <span className="bg-green-200 text-green-800 px-2 py-1 rounded-full text-xs flex items-center">
+                        {item.name} –
+                        <input
+                          type="text"
+                          className="ml-2 border px-2 py-1 rounded text-xs w-24"
+                          value={item.dosage}
+                          onChange={(e) => {
+                            const updated = [...assignedEssentials[meal]];
+                            updated[idx].dosage = e.target.value;
+                            setAssignedEssentials(prev => ({
+                              ...prev,
+                              [meal]: updated
+                            }));
+                          }}
+                          placeholder="Dosage"
+                        />
+                      </span>
                       <button
-                        className="ml-1 text-red-600"
+                        className="text-red-600 text-xs"
                         onClick={() =>
                           setAssignedEssentials(prev => ({
                             ...prev,
@@ -241,7 +246,7 @@ export default function ClientProfile() {
                       >
                         ✕
                       </button>
-                    </span>
+                    </div>
                   ))}
                 </div>
               ) : (
@@ -260,23 +265,21 @@ export default function ClientProfile() {
 
                 setAssignedEssentials(prev => {
                   const current = prev[meal] || [];
-                  if (current.some(item => item.toLowerCase() === val.toLowerCase())) {
-                    return prev; // prevent duplicates (case-insensitive)
+                  if (current.some(item => item.name.toLowerCase() === val.toLowerCase())) {
+                    return prev; // prevent duplicates
                   }
                   return {
                     ...prev,
-                    [meal]: [...current, val]
+                    [meal]: [...current, { name: val, dosage: "" }]
                   };
                 });
 
-                // Reset dropdown to default to allow re-selection
                 e.target.selectedIndex = 0;
               }}
-
             >
               <option value="">➕ Add Essential</option>
               {essentialsList
-                .filter(item => !(assignedEssentials[meal]?.includes(item)))
+                .filter(item => !(assignedEssentials[meal]?.some(e => e.name === item)))
                 .map((item, idx) => (
                   <option key={idx} value={item}>
                     {item}
@@ -425,113 +428,6 @@ export default function ClientProfile() {
           📄 Generate PDF Plan
         </button>
       </div>
-
-
-
-
-
-      {/* Progress Section */}
-      <div className="bg-white p-5 rounded-xl shadow max-w-4xl mx-auto">
-        <h3 className="text-xl font-semibold mb-4 text-gray-800">📅 Daily Tracking History</h3>
-        <div className="mb-4">
-          <label className="block mb-1 font-medium">Select Date:</label>
-          <input
-            type="date"
-            className="border p-2 rounded w-full"
-            value={selectedDate}
-            onChange={(e) => setSelectedDate(e.target.value)}
-          />
-        </div>
-
-        {!selectedEntry ? (
-          <p className="text-gray-600">No record found for the selected date.</p>
-        ) : (
-          <div className="p-4 bg-slate-50 rounded border space-y-4">
-            <p><strong>Date:</strong> {selectedEntry.date}</p>
-
-            {/* Foods & Macros by Meal */}
-            <div>
-              <strong>🍽️ Foods & Macros by Meal:</strong>
-              {meals.map(meal => {
-                const completed = selectedEntry.completedFoods?.filter(label => label.startsWith(`${meal}_`)) || [];
-                const foods = completed.map(label => label.split("_")[1]);
-
-                // Get full food objects
-                const foodObjects = Object.values(assignedFood[meal] || []).filter(f => foods.includes(f.name));
-
-                let mealCalories = 0, mealProtein = 0, mealCarbs = 0, mealFat = 0;
-                foodObjects.forEach(f => {
-                  const factor = f.grams / 100;
-                  mealCalories += f.calories * factor;
-                  mealProtein += (f.protein || 0) * factor;
-                  mealCarbs += (f.carbs || 0) * factor;
-                  mealFat += (f.fat || 0) * factor;
-                });
-
-                return (
-                  <div key={meal} className="ml-4 mt-2 space-y-1">
-                    <p className="font-medium text-blue-700">{meal}:</p>
-                    {foods.length > 0 ? (
-                      <ul className="list-disc list-inside text-sm ml-2">
-                        {foodObjects.map((f, idx) => (
-                          <li key={idx}>
-                            {f.name} – {f.grams}g ≈ {(f.calories * f.grams / 100).toFixed(0)} kcal
-                          </li>
-                        ))}
-                      </ul>
-                    ) : (
-                      <p className="text-gray-500 ml-2">None</p>
-                    )}
-                    <p className="text-xs ml-2 text-gray-600">
-                      Calories: {mealCalories.toFixed(0)} kcal | Protein: {mealProtein.toFixed(1)}g | Carbs: {mealCarbs.toFixed(1)}g | Fat: {mealFat.toFixed(1)}g
-                    </p>
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Essentials Taken */}
-            <div>
-              <strong>💊 Essentials Taken:</strong>
-              {meals.map(meal => {
-                const essentials = assignedEssentials[meal] || [];
-                return (
-                  <div key={meal} className="ml-4 mt-1">
-                    <span className="font-medium text-green-700">{meal}:</span>{" "}
-                    {essentials.length > 0
-                      ? essentials.join(", ")
-                      : <span className="text-gray-500">None</span>}
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Workouts Done */}
-            <div>
-              <strong>🏋️ Workouts Done:</strong>{" "}
-              {selectedEntry.completedWorkouts?.length > 0
-                ? selectedEntry.completedWorkouts.join(", ")
-                : <span className="text-gray-500">None</span>}
-            </div>
-
-            {/* Total Calories */}
-            <div>
-              <strong>🔥 Estimated Total Calories:</strong>{" "}
-              {
-                selectedEntry.completedFoods?.reduce((sum, label) => {
-                  const [, foodName] = label.split("_");
-                  let food = null;
-                  Object.values(assignedFood).flat().forEach(f => {
-                    if (f.name === foodName) food = f;
-                  });
-                  return sum + (food ? (food.calories * (food.grams / 100)) : 0);
-                }, 0).toFixed(0)
-              } kcal
-            </div>
-          </div>
-        )}
-      </div>
-
 
 
     </div>
