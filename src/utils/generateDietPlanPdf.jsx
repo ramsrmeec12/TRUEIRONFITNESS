@@ -66,6 +66,29 @@ export function generateDietPlanPdf(client, food, essentials, workoutPerDay) {
     pdf.text("Daily Food Chart", 20, y2);
     y2 += 10;
 
+    // ⬇️ Compute total macros
+    let totalCalories = 0, totalProtein = 0, totalCarbs = 0, totalFat = 0;
+    Object.values(food).flat().forEach(item => {
+      const grams = item.grams || 100;
+      const factor = grams / 100;
+      totalCalories += (item.calories || 0) * factor;
+      totalProtein += (item.protein || 0) * factor;
+      totalCarbs += (item.carbs || 0) * factor;
+      totalFat += (item.fat || 0) * factor;
+    });
+
+    pdf.setFontSize(12);
+    pdf.setFont("helvetica", "normal");
+    pdf.text(`Total Calories: ${totalCalories.toFixed(0)} kcal`, 20, y2);
+    y2 += 6;
+    pdf.text(
+      `Protein: ${totalProtein.toFixed(1)}g | Carbs: ${totalCarbs.toFixed(1)}g | Fat: ${totalFat.toFixed(1)}g`,
+      20,
+      y2
+    );
+    y2 += 10;
+
+
     Object.entries(food).forEach(([meal, items]) => {
       if (items.length === 0) return;
       autoTable(pdf, {

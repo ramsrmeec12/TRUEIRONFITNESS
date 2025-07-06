@@ -188,13 +188,15 @@ export default function ClientProfile() {
               defaultValue=""
             >
               <option value="" disabled>➕ Add Food to {meal}</option>
-              {foodItems.map(food => (
-                <option key={food.id} value={food.id}>
-                  {food.name} ({food.calories} kcal)
-                </option>
-              ))}
-
+              {[...foodItems]
+                .sort((a, b) => a.name.localeCompare(b.name))
+                .map(food => (
+                  <option key={food.id} value={food.id}>
+                    {food.name} ({food.calories} kcal)
+                  </option>
+                ))}
             </select>
+
 
             {/* Food list */}
             <ul className="space-y-2 mb-3">
