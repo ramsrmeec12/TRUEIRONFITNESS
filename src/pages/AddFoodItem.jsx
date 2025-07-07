@@ -1,5 +1,12 @@
 import { useState, useEffect } from "react";
-import { collection, addDoc, getDocs } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  getDocs,
+  doc,
+  updateDoc,
+  deleteDoc,
+} from "firebase/firestore";
 import { db } from "../firebase";
 
 export default function AddFoodItem() {
@@ -12,14 +19,16 @@ export default function AddFoodItem() {
   });
 
   const [existingFoods, setExistingFoods] = useState([]);
+  const [editingId, setEditingId] = useState(null);
+  const [editedFood, setEditedFood] = useState({});
 
   const calculateCalories = (protein, carbs, fat) => {
-    return (protein * 4) + (carbs * 4) + (fat * 9);
+    return protein * 4 + carbs * 4 + fat * 9;
   };
 
   const fetchFoods = async () => {
     const snap = await getDocs(collection(db, "foods"));
-    const items = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    const items = snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
     setExistingFoods(items);
   };
 
@@ -29,11 +38,7 @@ export default function AddFoodItem() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    const updated = {
-      ...food,
-      [name]: value,
-    };
-
+    const updated = { ...food, [name]: value };
 
     const protein = parseFloat(updated.protein) || 0;
     const carbs = parseFloat(updated.carbs) || 0;
@@ -49,9 +54,38 @@ export default function AddFoodItem() {
       await addDoc(collection(db, "foods"), food);
       alert("✅ Food item added successfully!");
       setFood({ name: "", protein: "", carbs: "", fat: "", calories: 0 });
-      fetchFoods(); // refresh the list
+      fetchFoods();
     } catch (err) {
       console.error("Error adding food:", err);
+    }
+  };
+
+  const handleSaveEdit = async (id) => {
+    const { name, protein, carbs, fat } = editedFood;
+    const newCalories = calculateCalories(protein, carbs, fat);
+    const foodRef = doc(db, "foods", id);
+
+    await updateDoc(foodRef, {
+      name,
+      protein,
+      carbs,
+      fat,
+      calories: newCalories,
+    });
+
+    setEditingId(null);
+    setEditedFood({});
+    fetchFoods();
+  };
+
+  const handleDelete = async (id) => {
+    if (window.confirm("Are you sure you want to delete this food item?")) {
+      try {
+        await deleteDoc(doc(db, "foods", id));
+        fetchFoods();
+      } catch (err) {
+        console.error("Error deleting food:", err);
+      }
     }
   };
 
@@ -62,10 +96,10 @@ export default function AddFoodItem() {
           Add Food Item
         </h2>
 
-        php-template
-        Copy
-        Edit
-        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <form
+          onSubmit={handleSubmit}
+          className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6"
+        >
           <input
             name="name"
             value={food.name}
@@ -114,22 +148,121 @@ export default function AddFoodItem() {
         </form>
 
         <div>
-          <h3 className="text-xl font-semibold text-slate-800 dark:text-white mb-3">🧾 Existing Food Items</h3>
+          <h3 className="text-xl font-semibold text-slate-800 dark:text-white mb-3">
+            🧾 Existing Food Items
+          </h3>
           {existingFoods.length === 0 ? (
             <p className="text-gray-500">No food items added yet.</p>
           ) : (
-            <ul className="space-y-1 text-sm max-h-64 overflow-y-auto">
+            <ul className="space-y-1 text-sm">
               {[...existingFoods]
                 .sort((a, b) => a.name.localeCompare(b.name))
                 .map((item) => (
-                  <li key={item.id} className="border-b pb-1 text-white">
-                    {item.name} – {item.protein}g P / {item.carbs}g C / {item.fat}g F – {item.calories} kcal
+                  <li
+                    key={item.id}
+                    className="border-b pb-1 text-white flex flex-col gap-1"
+                  >
+                    <div className="flex justify-between items-center">
+                      {editingId === item.id ? (
+                        <input
+                          type="text"
+                          value={editedFood.name}
+                          onChange={(e) =>
+                            setEditedFood({
+                              ...editedFood,
+                              name: e.target.value,
+                            })
+                          }
+                          className="text-black px-2 py-1 rounded w-full mb-1"
+                        />
+                      ) : (
+                        <strong>{item.name}</strong>
+                      )}
+
+                      <div className="space-x-2">
+                        {editingId === item.id ? (
+                          <button
+                            onClick={() => handleSaveEdit(item.id)}
+                            className="text-green-500 text-xs font-semibold"
+                          >
+                            💾 Save
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => {
+                              setEditingId(item.id);
+                              setEditedFood({
+                                name: item.name,
+                                protein: item.protein,
+                                carbs: item.carbs,
+                                fat: item.fat,
+                              });
+                            }}
+                            className="text-blue-400 text-xs font-semibold"
+                          >
+                            ✏️ Edit
+                          </button>
+                        )}
+
+                        <button
+                          onClick={() => handleDelete(item.id)}
+                          className="text-red-400 text-xs font-semibold"
+                        >
+                          🗑️ Delete
+                        </button>
+                      </div>
+                    </div>
+
+                    {editingId === item.id ? (
+                      <div className="grid grid-cols-3 gap-2">
+                        <input
+                          type="number"
+                          value={editedFood.protein}
+                          onChange={(e) =>
+                            setEditedFood({
+                              ...editedFood,
+                              protein: parseFloat(e.target.value),
+                            })
+                          }
+                          placeholder="Protein"
+                          className="text-black px-2 py-1 rounded"
+                        />
+                        <input
+                          type="number"
+                          value={editedFood.carbs}
+                          onChange={(e) =>
+                            setEditedFood({
+                              ...editedFood,
+                              carbs: parseFloat(e.target.value),
+                            })
+                          }
+                          placeholder="Carbs"
+                          className="text-black px-2 py-1 rounded"
+                        />
+                        <input
+                          type="number"
+                          value={editedFood.fat}
+                          onChange={(e) =>
+                            setEditedFood({
+                              ...editedFood,
+                              fat: parseFloat(e.target.value),
+                            })
+                          }
+                          placeholder="Fat"
+                          className="text-black px-2 py-1 rounded"
+                        />
+                      </div>
+                    ) : (
+                      <span>
+                        {item.protein}g P / {item.carbs}g C / {item.fat}g F –{" "}
+                        {item.calories} kcal
+                      </span>
+                    )}
                   </li>
                 ))}
             </ul>
           )}
         </div>
-
       </div>
     </div>
   );

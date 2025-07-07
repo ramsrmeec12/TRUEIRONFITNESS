@@ -39,9 +39,9 @@ export default function ViewClients() {
     }
   };
 
-  return (
-    <div className="min-h-screen bg-slate-100 p-6">
-      <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">Client List</h1>
+  const renderClientTable = (clientsToRender, title) => (
+    <div className="mb-10">
+      <h2 className="text-2xl font-bold text-gray-800 mb-4">{title}</h2>
       <div className="overflow-x-auto shadow-md rounded-xl bg-white p-4">
         <table className="min-w-full text-sm text-left text-gray-700">
           <thead className="text-xs uppercase bg-slate-200">
@@ -49,19 +49,17 @@ export default function ViewClients() {
               <th className="px-4 py-3">Name</th>
               <th className="px-4 py-3">Phone</th>
               <th className="px-4 py-3">Email</th>
-              <th className="px-4 py-3">DOB</th>
               <th className="px-4 py-3">Gender</th>
               <th className="px-4 py-3">Type</th>
               <th className="px-4 py-3">Height</th>
               <th className="px-4 py-3">Weight</th>
-              <th className="px-4 py-3">Diet</th>
               <th className="px-4 py-3">BMI</th>
+              <th className="px-4 py-3">Status</th>
               <th className="px-4 py-3">Actions</th>
-
             </tr>
           </thead>
           <tbody>
-            {clients.map((client) => (
+            {clientsToRender.map(client => (
               <tr
                 key={client.id}
                 className="border-t hover:bg-slate-50 cursor-pointer"
@@ -70,27 +68,23 @@ export default function ViewClients() {
                 <td className="px-4 py-2">{client.name}</td>
                 <td className="px-4 py-2">{client.phone}</td>
                 <td className="px-4 py-2">{client.email}</td>
-                <td className="px-4 py-2">{client.dob}</td>
                 <td className="px-4 py-2">{client.gender}</td>
                 <td className="px-4 py-2">{client.transformationType}</td>
                 <td className="px-4 py-2">{client.height} cm</td>
                 <td className="px-4 py-2">{client.weight} kg</td>
-                <td className="px-4 py-2 capitalize">{client.dietType || "N/A"}</td>
                 <td className="px-4 py-2">
                   {client.height && client.weight ? (() => {
                     const bmi = client.weight / Math.pow(client.height / 100, 2);
-                    const rounded = bmi.toFixed(1);
-                    let color = "text-gray-700";
-                    if (bmi < 18.5) color = "text-blue-500";
-                    else if (bmi < 25) color = "text-green-600";
-                    else if (bmi < 30) color = "text-orange-500";
-                    else color = "text-red-600";
-                    return <span className={color}>{rounded}</span>;
+                    return <span>{bmi.toFixed(1)}</span>;
                   })() : "N/A"}
                 </td>
-
-
-
+                <td className="px-4 py-2">
+                  {client.status === "completed" ? (
+                    <span className="text-green-700 text-xs bg-green-100 px-2 py-1 rounded">Completed</span>
+                  ) : (
+                    <span className="text-yellow-700 text-xs bg-yellow-100 px-2 py-1 rounded">Active</span>
+                  )}
+                </td>
                 <td className="px-4 py-2">
                   <button
                     onClick={(e) => {
@@ -107,6 +101,17 @@ export default function ViewClients() {
           </tbody>
         </table>
       </div>
+    </div>
+  );
+
+  const activeClients = clients.filter(c => c.status !== "completed");
+  const completedClients = clients.filter(c => c.status === "completed");
+
+  return (
+    <div className="min-h-screen bg-slate-100 p-6">
+      <h1 className="text-3xl font-bold text-center text-gray-800 mb-10">Client Management</h1>
+      {renderClientTable(activeClients, "🟢 Active Clients")}
+      {renderClientTable(completedClients, "✅ Completed Clients")}
 
       {/* Edit Modal */}
       {editingClient && (
@@ -124,53 +129,34 @@ export default function ViewClients() {
                   className="border rounded px-3 py-2"
                 />
               ))}
-              <select
-                name="gender"
-                value={editingClient.gender}
-                onChange={handleInputChange}
-                className="border rounded px-3 py-2"
-              >
+              <select name="gender" value={editingClient.gender} onChange={handleInputChange} className="border rounded px-3 py-2">
                 <option value="">Gender</option>
                 <option value="male">Male</option>
                 <option value="female">Female</option>
               </select>
-              <select
-                name="transformationType"
-                value={editingClient.transformationType}
-                onChange={handleInputChange}
-                className="border rounded px-3 py-2"
-              >
+              <select name="transformationType" value={editingClient.transformationType} onChange={handleInputChange} className="border rounded px-3 py-2">
                 <option value="">Transformation Type</option>
                 <option value="fatloss">Fat Loss</option>
                 <option value="musclegain">Muscle Gain</option>
                 <option value="bodyrecomp">Body Recomp</option>
               </select>
-              <select
-                name="dietType"
-                value={editingClient.dietType || ""}
-                onChange={handleInputChange}
-                className="border rounded px-3 py-2"
-              >
+              <select name="dietType" value={editingClient.dietType || ""} onChange={handleInputChange} className="border rounded px-3 py-2">
                 <option value="">Diet Type</option>
                 <option value="veg">Veg</option>
                 <option value="nonveg">Non-Veg</option>
               </select>
-
+              <select name="status" value={editingClient.status || "active"} onChange={handleInputChange} className="border rounded px-3 py-2">
+                <option value="active">Active</option>
+                <option value="completed">Completed</option>
+              </select>
             </div>
             <div className="mt-4 flex justify-end gap-3">
-              <button
-                onClick={() => setEditingClient(null)}
-                className="bg-gray-300 hover:bg-gray-400 px-4 py-2 rounded"
-              >
+              <button onClick={() => setEditingClient(null)} className="bg-gray-300 hover:bg-gray-400 px-4 py-2 rounded">
                 Cancel
               </button>
-              <button
-                onClick={handleUpdate}
-                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
-              >
+              <button onClick={handleUpdate} className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">
                 Save Changes
               </button>
-              
             </div>
           </div>
         </div>

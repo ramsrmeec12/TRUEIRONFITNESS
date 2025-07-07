@@ -2,6 +2,7 @@ import { useState } from "react";
 import { collection, addDoc } from "firebase/firestore";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { db } from "../firebase";
+import emailjs from "@emailjs/browser";
 
 export default function AddClient() {
   const [formData, setFormData] = useState({
@@ -17,9 +18,26 @@ export default function AddClient() {
     weight: "",
   });
 
-
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const sendEmail = async () => {
+    try {
+      await emailjs.send(
+        "service_cw04z5y",
+        "template_o3i5cuu",
+        {
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+        },
+        "q8wljWrJUBah3yw32" // your public key
+      );
+      console.log("✅ Email sent");
+    } catch (error) {
+      console.error("❌ Failed to send email:", error);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -29,13 +47,13 @@ export default function AddClient() {
       // Step 1: Create user in Firebase Authentication
       await createUserWithEmailAndPassword(auth, formData.email, formData.password);
 
-      // Step 2: Store remaining data in Firestore
-      const { password, ...clientData } = formData; // Remove password before storing
-      await addDoc(collection(db, "clients"), clientData);
+      // Step 2: Store data in Firestore
+      await addDoc(collection(db, "clients"), formData);
 
-      alert("Client account created and stored successfully!");
+      // Step 3: Send welcome email
+      await sendEmail();
 
-      // Reset form
+      alert("Client account created and email sent!");
       setFormData({
         name: "",
         phone: "",
@@ -44,11 +62,12 @@ export default function AddClient() {
         dob: "",
         gender: "",
         transformationType: "",
+        dietType: "",
         height: "",
         weight: "",
       });
     } catch (error) {
-      console.error("Error adding client:", error.message);
+      console.error("❌ Error adding client:", error.message);
       alert("Error: " + error.message);
     }
   };
@@ -77,13 +96,11 @@ export default function AddClient() {
             <option value="body recomposition">Body Recomposition</option>
             <option value="competition preparation">Competition Preparation</option>
           </select>
-
           <select name="dietType" value={formData.dietType || ""} onChange={handleChange} className="input" required>
             <option value="">Diet Type</option>
             <option value="veg">Veg</option>
             <option value="nonveg">Non-Veg</option>
           </select>
-
           <input name="height" type="number" placeholder="Height (cm)" value={formData.height} onChange={handleChange} className="input" required />
           <input name="weight" type="number" placeholder="Weight (kg)" value={formData.weight} onChange={handleChange} className="input" required />
           <button type="submit" className="col-span-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-xl transition-all">

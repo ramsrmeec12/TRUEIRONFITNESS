@@ -1,0 +1,283 @@
+[debug] [2025-07-07T03:54:53.174Z] ----------------------------------------------------------------------
+[debug] [2025-07-07T03:54:53.177Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\ramsk\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy --only functions
+[debug] [2025-07-07T03:54:53.178Z] CLI Version:   14.9.0
+[debug] [2025-07-07T03:54:53.178Z] Platform:      win32
+[debug] [2025-07-07T03:54:53.178Z] Node Version:  v22.12.0
+[debug] [2025-07-07T03:54:53.179Z] Time:          Mon Jul 07 2025 09:24:53 GMT+0530 (India Standard Time)
+[debug] [2025-07-07T03:54:53.179Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-07-07T03:54:53.412Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-07-07T03:54:53.413Z] > authorizing via signed-in user (ram369mk@gmail.com)
+[debug] [2025-07-07T03:54:53.413Z] [iam] checking project gymowner-8be82 for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]
+[debug] [2025-07-07T03:54:53.414Z] Checked if tokens are valid: true, expires at: 1751862240299
+[debug] [2025-07-07T03:54:53.415Z] Checked if tokens are valid: true, expires at: 1751862240299
+[debug] [2025-07-07T03:54:53.416Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/gymowner-8be82:testIamPermissions [none]
+[debug] [2025-07-07T03:54:53.416Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/gymowner-8be82:testIamPermissions x-goog-quota-user=projects/gymowner-8be82
+[debug] [2025-07-07T03:54:53.416Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/gymowner-8be82:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2025-07-07T03:54:54.731Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/gymowner-8be82:testIamPermissions 200
+[debug] [2025-07-07T03:54:54.731Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/gymowner-8be82:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2025-07-07T03:54:54.732Z] Checked if tokens are valid: true, expires at: 1751862240299
+[debug] [2025-07-07T03:54:54.732Z] Checked if tokens are valid: true, expires at: 1751862240299
+[debug] [2025-07-07T03:54:54.732Z] >>> [apiv2][query] POST https://iam.googleapis.com/v1/projects/gymowner-8be82/serviceAccounts/gymowner-8be82@appspot.gserviceaccount.com:testIamPermissions [none]
+[debug] [2025-07-07T03:54:54.732Z] >>> [apiv2][body] POST https://iam.googleapis.com/v1/projects/gymowner-8be82/serviceAccounts/gymowner-8be82@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[debug] [2025-07-07T03:54:56.241Z] <<< [apiv2][status] POST https://iam.googleapis.com/v1/projects/gymowner-8be82/serviceAccounts/gymowner-8be82@appspot.gserviceaccount.com:testIamPermissions 200
+[debug] [2025-07-07T03:54:56.241Z] <<< [apiv2][body] POST https://iam.googleapis.com/v1/projects/gymowner-8be82/serviceAccounts/gymowner-8be82@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[info] 
+[info] === Deploying to 'gymowner-8be82'...
+[info] 
+[info] i  deploying functions 
+[info] Running command: npm --prefix "$RESOURCE_DIR" run lint
+[info] +  functions: Finished running predeploy script. 
+[debug] [2025-07-07T03:54:56.919Z] Checked if tokens are valid: true, expires at: 1751862240299
+[debug] [2025-07-07T03:54:56.919Z] Checked if tokens are valid: true, expires at: 1751862240299
+[debug] [2025-07-07T03:54:56.920Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/projects/gymowner-8be82 [none]
+[debug] [2025-07-07T03:54:57.201Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/projects/gymowner-8be82 200
+[debug] [2025-07-07T03:54:57.202Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/projects/gymowner-8be82 {"projectNumber":"1005011737804","projectId":"gymowner-8be82","lifecycleState":"ACTIVE","name":"IRONLIFEFITNESS","labels":{"firebase":"enabled","firebase-core":"disabled"},"createTime":"2025-06-30T15:04:35.979693Z"}
+[info] i  functions: preparing codebase default for deployment 
+[info] i  functions: ensuring required API cloudfunctions.googleapis.com is enabled... 
+[info] i  functions: ensuring required API cloudbuild.googleapis.com is enabled... 
+[info] i  artifactregistry: ensuring required API artifactregistry.googleapis.com is enabled... 
+[debug] [2025-07-07T03:54:57.206Z] Checked if tokens are valid: true, expires at: 1751862240299
+[debug] [2025-07-07T03:54:57.206Z] Checked if tokens are valid: true, expires at: 1751862240299
+[debug] [2025-07-07T03:54:57.206Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/gymowner-8be82/adminSdkConfig [none]
+[debug] [2025-07-07T03:54:57.622Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/gymowner-8be82/adminSdkConfig 200
+[debug] [2025-07-07T03:54:57.622Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/gymowner-8be82/adminSdkConfig {"projectId":"gymowner-8be82","databaseURL":"https://gymowner-8be82-default-rtdb.firebaseio.com","storageBucket":"gymowner-8be82.firebasestorage.app"}
+[debug] [2025-07-07T03:54:57.622Z] Checked if tokens are valid: true, expires at: 1751862240299
+[debug] [2025-07-07T03:54:57.623Z] Checked if tokens are valid: true, expires at: 1751862240299
+[debug] [2025-07-07T03:54:57.623Z] >>> [apiv2][query] GET https://runtimeconfig.googleapis.com/v1beta1/projects/gymowner-8be82/configs [none]
+[debug] [2025-07-07T03:54:57.974Z] <<< [apiv2][status] GET https://runtimeconfig.googleapis.com/v1beta1/projects/gymowner-8be82/configs 200
+[debug] [2025-07-07T03:54:57.974Z] <<< [apiv2][body] GET https://runtimeconfig.googleapis.com/v1beta1/projects/gymowner-8be82/configs {"configs":[{"name":"projects/gymowner-8be82/configs/gmail"}]}
+[debug] [2025-07-07T03:54:57.974Z] Checked if tokens are valid: true, expires at: 1751862240299
+[debug] [2025-07-07T03:54:57.974Z] Checked if tokens are valid: true, expires at: 1751862240299
+[debug] [2025-07-07T03:54:57.974Z] >>> [apiv2][query] GET https://runtimeconfig.googleapis.com/v1beta1/projects/gymowner-8be82/configs/gmail/variables [none]
+[debug] [2025-07-07T03:54:58.276Z] <<< [apiv2][status] GET https://runtimeconfig.googleapis.com/v1beta1/projects/gymowner-8be82/configs/gmail/variables 200
+[debug] [2025-07-07T03:54:58.276Z] <<< [apiv2][body] GET https://runtimeconfig.googleapis.com/v1beta1/projects/gymowner-8be82/configs/gmail/variables {"variables":[{"name":"projects/gymowner-8be82/configs/gmail/variables/pass","updateTime":"2025-07-07T03:26:39.071614Z"},{"name":"projects/gymowner-8be82/configs/gmail/variables/email","updateTime":"2025-07-07T03:26:38.460559263Z"}]}
+[debug] [2025-07-07T03:54:58.276Z] Checked if tokens are valid: true, expires at: 1751862240299
+[debug] [2025-07-07T03:54:58.276Z] Checked if tokens are valid: true, expires at: 1751862240299
+[debug] [2025-07-07T03:54:58.276Z] Checked if tokens are valid: true, expires at: 1751862240299
+[debug] [2025-07-07T03:54:58.276Z] Checked if tokens are valid: true, expires at: 1751862240299
+[debug] [2025-07-07T03:54:58.277Z] >>> [apiv2][query] GET https://runtimeconfig.googleapis.com/v1beta1/projects/gymowner-8be82/configs/gmail/variables/pass [none]
+[debug] [2025-07-07T03:54:58.277Z] >>> [apiv2][query] GET https://runtimeconfig.googleapis.com/v1beta1/projects/gymowner-8be82/configs/gmail/variables/email [none]
+[debug] [2025-07-07T03:54:58.625Z] <<< [apiv2][status] GET https://runtimeconfig.googleapis.com/v1beta1/projects/gymowner-8be82/configs/gmail/variables/email 200
+[debug] [2025-07-07T03:54:58.625Z] <<< [apiv2][body] GET https://runtimeconfig.googleapis.com/v1beta1/projects/gymowner-8be82/configs/gmail/variables/email {"name":"projects/gymowner-8be82/configs/gmail/variables/email","updateTime":"2025-07-07T03:26:38.460559263Z","text":"ram369mk@gmail.com"}
+[debug] [2025-07-07T03:54:58.708Z] <<< [apiv2][status] GET https://runtimeconfig.googleapis.com/v1beta1/projects/gymowner-8be82/configs/gmail/variables/pass 200
+[debug] [2025-07-07T03:54:58.708Z] <<< [apiv2][body] GET https://runtimeconfig.googleapis.com/v1beta1/projects/gymowner-8be82/configs/gmail/variables/pass {"name":"projects/gymowner-8be82/configs/gmail/variables/pass","updateTime":"2025-07-07T03:26:39.071614Z","text":"gfjqsrdsucbvvach"}
+[debug] [2025-07-07T03:54:58.711Z] Validating nodejs source
+[warn] !  functions: Runtime Node.js 18 was deprecated on 2025-04-30 and will be decommissioned on 2025-10-30, after which you will not be able to deploy without upgrading. Consider upgrading now to avoid disruption. See https://cloud.google.com/functions/docs/runtime-support for full details on the lifecycle policy 
+[warn] !  functions: package.json indicates an outdated version of firebase-functions. Please upgrade using npm install --save firebase-functions@latest in your functions directory. 
+[warn] !  functions: Please note that there will be breaking changes when you upgrade. 
+[debug] [2025-07-07T03:54:59.962Z] > [functions] package.json contents: {
+  "name": "functions",
+  "description": "Cloud Functions for Firebase",
+  "scripts": {
+    "lint": "echo 'Skipping lint'",
+    "serve": "firebase emulators:start --only functions",
+    "shell": "firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "18"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "firebase-admin": "^10.0.2",
+    "firebase-functions": "^3.20.1",
+    "nodemailer": "^7.0.4"
+  },
+  "devDependencies": {
+    "eslint": "^8.15.0",
+    "eslint-config-google": "^0.14.0",
+    "firebase-functions-test": "^3.1.0"
+  },
+  "private": true
+}
+[debug] [2025-07-07T03:54:59.963Z] Building nodejs source
+[info] i  functions: Loading and analyzing source code for codebase default to determine what to deploy 
+[info] i  functions: You are using a version of firebase-functions SDK (3.20.1) that does not have support for the newest Firebase Extensions features. Please update firebase-functions SDK to >=5.1.0 to use them correctly 
+[debug] [2025-07-07T03:54:59.965Z] Could not find functions.yaml. Must use http discovery
+[debug] [2025-07-07T03:54:59.983Z] Found firebase-functions binary at 'C:\Users\ramsk\Downloads\REACT TUTORIAL\trueironfitness\functions\node_modules\.bin\firebase-functions'
+[info] Serving at port 8163
+
+[error] (node:6940) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+
+[debug] [2025-07-07T03:55:00.472Z] Got response from /__/functions.yaml {"endpoints":{"sendWelcomeEmail":{"platform":"gcfv1","timeoutSeconds":60,"availableMemoryMb":256,"eventTrigger":{"eventType":"providers/cloud.firestore/eventTypes/document.create","eventFilters":{"resource":"projects/gymowner-8be82/databases/(default)/documents/clients/{clientId}"},"retry":false},"labels":{},"entryPoint":"sendWelcomeEmail"}},"specVersion":"v1alpha1","requiredAPIs":[]}
+[info] shutdown requested via /__/quitquitquit
+
+[info] i  functions: preparing functions directory for uploading... 
+[info] i  functions: packaged C:\Users\ramsk\Downloads\REACT TUTORIAL\trueironfitness\functions (46.01 KB) for uploading 
+[debug] [2025-07-07T03:55:04.589Z] Checked if tokens are valid: true, expires at: 1751862240299
+[debug] [2025-07-07T03:55:04.589Z] Checked if tokens are valid: true, expires at: 1751862240299
+[debug] [2025-07-07T03:55:04.589Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v1/projects/gymowner-8be82/locations/-/functions [none]
+[debug] [2025-07-07T03:55:05.464Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v1/projects/gymowner-8be82/locations/-/functions 200
+[debug] [2025-07-07T03:55:05.464Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v1/projects/gymowner-8be82/locations/-/functions {}
+[debug] [2025-07-07T03:55:05.465Z] Checked if tokens are valid: true, expires at: 1751862240299
+[debug] [2025-07-07T03:55:05.465Z] Checked if tokens are valid: true, expires at: 1751862240299
+[debug] [2025-07-07T03:55:05.466Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v2/projects/gymowner-8be82/locations/-/functions filter=environment%3D%22GEN_2%22
+[debug] [2025-07-07T03:55:07.058Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v2/projects/gymowner-8be82/locations/-/functions 200
+[debug] [2025-07-07T03:55:07.059Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v2/projects/gymowner-8be82/locations/-/functions {"functions":[{"name":"projects/gymowner-8be82/locations/us-central1/functions/createClientUser","buildConfig":{"build":"projects/1005011737804/locations/us-central1/builds/2e6f6bac-6866-4710-aa8d-6da4eb7f0f2f","runtime":"nodejs22","entryPoint":"createClientUser","source":{"storageSource":{"bucket":"gcf-v2-sources-1005011737804-us-central1","object":"createClientUser/function-source.zip","generation":"1751632663967036"}},"environmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""},"dockerRepository":"projects/gymowner-8be82/locations/us-central1/repositories/gcf-artifacts","sourceProvenance":{"resolvedStorageSource":{"bucket":"gcf-v2-sources-1005011737804-us-central1","object":"createClientUser/function-source.zip","generation":"1751632663967036"}},"dockerRegistry":"ARTIFACT_REGISTRY","serviceAccount":"projects/gymowner-8be82/serviceAccounts/1005011737804-compute@developer.gserviceaccount.com","automaticUpdatePolicy":{}},"serviceConfig":{"service":"projects/gymowner-8be82/locations/us-central1/services/createclientuser","timeoutSeconds":60,"environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"gymowner-8be82\",\"storageBucket\":\"gymowner-8be82.firebasestorage.app\"}","GCLOUD_PROJECT":"gymowner-8be82","EVENTARC_CLOUD_EVENT_SOURCE":"projects/gymowner-8be82/locations/us-central1/services/createClientUser","FUNCTION_TARGET":"createClientUser","LOG_EXECUTION_ID":"true"},"maxInstanceCount":3,"ingressSettings":"ALLOW_ALL","uri":"https://createclientuser-k3gpjja35a-uc.a.run.app","serviceAccountEmail":"1005011737804-compute@developer.gserviceaccount.com","availableMemory":"256Mi","allTrafficOnLatestRevision":true,"revision":"createclientuser-00006-tes","maxInstanceRequestConcurrency":80,"availableCpu":"1"},"state":"ACTIVE","updateTime":"2025-07-04T12:38:41.544491390Z","labels":{"firebase-functions-hash":"a983b7ebf70333ffbfe19f04f391fa7f4f5d0abd","deployment-tool":"cli-firebase","deployment-callable":"true"},"environment":"GEN_2","url":"https://us-central1-gymowner-8be82.cloudfunctions.net/createClientUser","createTime":"2025-07-04T07:43:47.270104667Z","satisfiesPzi":true}]}
+[debug] [2025-07-07T03:55:07.065Z] Checked if tokens are valid: true, expires at: 1751862240299
+[debug] [2025-07-07T03:55:07.065Z] Checked if tokens are valid: true, expires at: 1751862240299
+[debug] [2025-07-07T03:55:07.066Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/projects/gymowner-8be82 [none]
+[debug] [2025-07-07T03:55:08.357Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/projects/gymowner-8be82 200
+[debug] [2025-07-07T03:55:08.357Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/projects/gymowner-8be82 {"projectNumber":"1005011737804","projectId":"gymowner-8be82","lifecycleState":"ACTIVE","name":"IRONLIFEFITNESS","labels":{"firebase":"enabled","firebase-core":"disabled"},"createTime":"2025-06-30T15:04:35.979693Z"}
+[debug] [2025-07-07T03:55:08.359Z] Checked if tokens are valid: true, expires at: 1751862240299
+[debug] [2025-07-07T03:55:08.359Z] Checked if tokens are valid: true, expires at: 1751862240299
+[debug] [2025-07-07T03:55:08.359Z] >>> [apiv2][query] POST https://cloudfunctions.googleapis.com/v1/projects/gymowner-8be82/locations/us-central1/functions:generateUploadUrl [none]
+[debug] [2025-07-07T03:55:08.359Z] >>> [apiv2][body] POST https://cloudfunctions.googleapis.com/v1/projects/gymowner-8be82/locations/us-central1/functions:generateUploadUrl {}
+[debug] [2025-07-07T03:55:09.113Z] <<< [apiv2][status] POST https://cloudfunctions.googleapis.com/v1/projects/gymowner-8be82/locations/us-central1/functions:generateUploadUrl 200
+[debug] [2025-07-07T03:55:09.113Z] <<< [apiv2][body] POST https://cloudfunctions.googleapis.com/v1/projects/gymowner-8be82/locations/us-central1/functions:generateUploadUrl {"uploadUrl":"https://storage.googleapis.com/uploads-733192029053.us-central1.cloudfunctions.appspot.com/8f1451f0-00ac-4d28-a489-164cfa7e1ba0.zip?GoogleAccessId=service-1005011737804@gcf-admin-robot.iam.gserviceaccount.com&Expires=1751862314&Signature=VE70Eh6yEmpW3lVWbxUZ4BhrcImz1UQ40bSDPfP2AeT9242%2BR8TtSw%2FUbwTzDjQzBYMGE%2F3uS3gfw%2FXJ1Tx4NfF2%2BT4p2E2cssWfnfsCLc%2Fr6JNrrbSB%2F8ZN3YyMqjnoLSQuVDnPdcGDptx3zdZ3aY9VdcMfd%2BMVilsYSepr%2Bh5qCV5ETypPo3wv%2Fo5KwInewh7kS1rcgO61FjE7iwpwknRoxlxe2mTwWsQn68kjWO8nE%2Bh%2FWZSi9oRd%2Fxn663GrdT7DpYY4PvxfKnxpfXvKL4%2BdJ4BP%2BQRCcDRxFfml5guEEcP0S2BfnZKs8IQ2JqTnr1AyCxAMbDwnxWIR%2FdO%2F7Q%3D%3D"}
+[debug] [2025-07-07T03:55:09.114Z] >>> [apiv2][query] PUT https://storage.googleapis.com/uploads-733192029053.us-central1.cloudfunctions.appspot.com/8f1451f0-00ac-4d28-a489-164cfa7e1ba0.zip GoogleAccessId=service-1005011737804%40gcf-admin-robot.iam.gserviceaccount.com&Expires=1751862314&Signature=VE70Eh6yEmpW3lVWbxUZ4BhrcImz1UQ40bSDPfP2AeT9242%2BR8TtSw%2FUbwTzDjQzBYMGE%2F3uS3gfw%2FXJ1Tx4NfF2%2BT4p2E2cssWfnfsCLc%2Fr6JNrrbSB%2F8ZN3YyMqjnoLSQuVDnPdcGDptx3zdZ3aY9VdcMfd%2BMVilsYSepr%2Bh5qCV5ETypPo3wv%2Fo5KwInewh7kS1rcgO61FjE7iwpwknRoxlxe2mTwWsQn68kjWO8nE%2Bh%2FWZSi9oRd%2Fxn663GrdT7DpYY4PvxfKnxpfXvKL4%2BdJ4BP%2BQRCcDRxFfml5guEEcP0S2BfnZKs8IQ2JqTnr1AyCxAMbDwnxWIR%2FdO%2F7Q%3D%3D
+[debug] [2025-07-07T03:55:09.114Z] >>> [apiv2][body] PUT https://storage.googleapis.com/uploads-733192029053.us-central1.cloudfunctions.appspot.com/8f1451f0-00ac-4d28-a489-164cfa7e1ba0.zip [stream]
+[debug] [2025-07-07T03:55:09.918Z] <<< [apiv2][status] PUT https://storage.googleapis.com/uploads-733192029053.us-central1.cloudfunctions.appspot.com/8f1451f0-00ac-4d28-a489-164cfa7e1ba0.zip 200
+[debug] [2025-07-07T03:55:09.918Z] <<< [apiv2][body] PUT https://storage.googleapis.com/uploads-733192029053.us-central1.cloudfunctions.appspot.com/8f1451f0-00ac-4d28-a489-164cfa7e1ba0.zip [omitted]
+[info] +  functions: functions folder uploaded successfully 
+[info] 
+The following functions are found in your project but do not exist in your local source code:
+	createClientUser(us-central1)
+
+If you are renaming a function or changing its region, it is recommended that you create the new function first before deleting the old one to prevent event loss. For more info, visit https://firebase.google.com/docs/functions/manage-functions#modify
+
+[info] i  functions: creating Node.js 18 (1st Gen) function sendWelcomeEmail(us-central1)... 
+[debug] [2025-07-07T03:55:22.681Z] Checked if tokens are valid: true, expires at: 1751862240299
+[debug] [2025-07-07T03:55:22.682Z] Checked if tokens are valid: true, expires at: 1751862240299
+[debug] [2025-07-07T03:55:22.682Z] >>> [apiv2][query] POST https://cloudfunctions.googleapis.com/v1/projects/gymowner-8be82/locations/us-central1/functions [none]
+[debug] [2025-07-07T03:55:22.682Z] >>> [apiv2][body] POST https://cloudfunctions.googleapis.com/v1/projects/gymowner-8be82/locations/us-central1/functions {"name":"projects/gymowner-8be82/locations/us-central1/functions/sendWelcomeEmail","sourceUploadUrl":"https://storage.googleapis.com/uploads-733192029053.us-central1.cloudfunctions.appspot.com/8f1451f0-00ac-4d28-a489-164cfa7e1ba0.zip?GoogleAccessId=service-1005011737804@gcf-admin-robot.iam.gserviceaccount.com&Expires=1751862314&Signature=VE70Eh6yEmpW3lVWbxUZ4BhrcImz1UQ40bSDPfP2AeT9242%2BR8TtSw%2FUbwTzDjQzBYMGE%2F3uS3gfw%2FXJ1Tx4NfF2%2BT4p2E2cssWfnfsCLc%2Fr6JNrrbSB%2F8ZN3YyMqjnoLSQuVDnPdcGDptx3zdZ3aY9VdcMfd%2BMVilsYSepr%2Bh5qCV5ETypPo3wv%2Fo5KwInewh7kS1rcgO61FjE7iwpwknRoxlxe2mTwWsQn68kjWO8nE%2Bh%2FWZSi9oRd%2Fxn663GrdT7DpYY4PvxfKnxpfXvKL4%2BdJ4BP%2BQRCcDRxFfml5guEEcP0S2BfnZKs8IQ2JqTnr1AyCxAMbDwnxWIR%2FdO%2F7Q%3D%3D","entryPoint":"sendWelcomeEmail","runtime":"nodejs18","dockerRegistry":"ARTIFACT_REGISTRY","labels":{"deployment-tool":"cli-firebase","firebase-functions-hash":"30fea97784f22d67d1648618dd2b05b664b2d9b6"},"eventTrigger":{"eventType":"providers/cloud.firestore/eventTypes/document.create","resource":"projects/gymowner-8be82/databases/(default)/documents/clients/{clientId}"},"environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"gymowner-8be82\",\"databaseURL\":\"https://gymowner-8be82-default-rtdb.firebaseio.com\",\"storageBucket\":\"gymowner-8be82.firebasestorage.app\"}","GCLOUD_PROJECT":"gymowner-8be82","EVENTARC_CLOUD_EVENT_SOURCE":"projects/gymowner-8be82/locations/us-central1/functions/sendWelcomeEmail"},"availableMemoryMb":256,"timeout":"60s","buildEnvironmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""}}
+[debug] [2025-07-07T03:55:23.705Z] <<< [apiv2][status] POST https://cloudfunctions.googleapis.com/v1/projects/gymowner-8be82/locations/us-central1/functions 200
+[debug] [2025-07-07T03:55:23.706Z] <<< [apiv2][body] POST https://cloudfunctions.googleapis.com/v1/projects/gymowner-8be82/locations/us-central1/functions {"name":"operations/cHJvamVjdHMvZ3ltb3duZXItOGJlODIvbG9jYXRpb25zL3VzLWNlbnRyYWwxL29wZXJhdGlvbnMvb3BlcmF0aW9uLTE3NTE4NjA1Mjg1ODAtNjM5NGVkMDgwODg0Yi0xZWM0NDZlYS1lZDYzMWRhZA","metadata":{"@type":"type.googleapis.com/google.cloud.functions.v1.OperationMetadataV1","target":"projects/gymowner-8be82/locations/us-central1/functions/sendWelcomeEmail","updateTime":"2025-07-07T03:55:29.066406357Z"}}
+[debug] [2025-07-07T03:55:23.707Z] Checked if tokens are valid: true, expires at: 1751862240299
+[debug] [2025-07-07T03:55:23.707Z] Checked if tokens are valid: true, expires at: 1751862240299
+[debug] [2025-07-07T03:55:23.707Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v1/operations/cHJvamVjdHMvZ3ltb3duZXItOGJlODIvbG9jYXRpb25zL3VzLWNlbnRyYWwxL29wZXJhdGlvbnMvb3BlcmF0aW9uLTE3NTE4NjA1Mjg1ODAtNjM5NGVkMDgwODg0Yi0xZWM0NDZlYS1lZDYzMWRhZA [none]
+[debug] [2025-07-07T03:55:24.092Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v1/operations/cHJvamVjdHMvZ3ltb3duZXItOGJlODIvbG9jYXRpb25zL3VzLWNlbnRyYWwxL29wZXJhdGlvbnMvb3BlcmF0aW9uLTE3NTE4NjA1Mjg1ODAtNjM5NGVkMDgwODg0Yi0xZWM0NDZlYS1lZDYzMWRhZA 200
+[debug] [2025-07-07T03:55:24.093Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v1/operations/cHJvamVjdHMvZ3ltb3duZXItOGJlODIvbG9jYXRpb25zL3VzLWNlbnRyYWwxL29wZXJhdGlvbnMvb3BlcmF0aW9uLTE3NTE4NjA1Mjg1ODAtNjM5NGVkMDgwODg0Yi0xZWM0NDZlYS1lZDYzMWRhZA {"name":"operations/cHJvamVjdHMvZ3ltb3duZXItOGJlODIvbG9jYXRpb25zL3VzLWNlbnRyYWwxL29wZXJhdGlvbnMvb3BlcmF0aW9uLTE3NTE4NjA1Mjg1ODAtNjM5NGVkMDgwODg0Yi0xZWM0NDZlYS1lZDYzMWRhZA","metadata":{"@type":"type.googleapis.com/google.cloud.functions.v1.OperationMetadataV1","target":"projects/gymowner-8be82/locations/us-central1/functions/sendWelcomeEmail","updateTime":"2025-07-07T03:55:29.066406357Z"}}
+[debug] [2025-07-07T03:55:24.610Z] [create-default-us-central1-sendWelcomeEmail] Retrying task index 0
+[debug] [2025-07-07T03:55:24.610Z] Checked if tokens are valid: true, expires at: 1751862240299
+[debug] [2025-07-07T03:55:24.610Z] Checked if tokens are valid: true, expires at: 1751862240299
+[debug] [2025-07-07T03:55:24.611Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v1/operations/cHJvamVjdHMvZ3ltb3duZXItOGJlODIvbG9jYXRpb25zL3VzLWNlbnRyYWwxL29wZXJhdGlvbnMvb3BlcmF0aW9uLTE3NTE4NjA1Mjg1ODAtNjM5NGVkMDgwODg0Yi0xZWM0NDZlYS1lZDYzMWRhZA [none]
+[debug] [2025-07-07T03:55:27.936Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v1/operations/cHJvamVjdHMvZ3ltb3duZXItOGJlODIvbG9jYXRpb25zL3VzLWNlbnRyYWwxL29wZXJhdGlvbnMvb3BlcmF0aW9uLTE3NTE4NjA1Mjg1ODAtNjM5NGVkMDgwODg0Yi0xZWM0NDZlYS1lZDYzMWRhZA 200
+[debug] [2025-07-07T03:55:27.936Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v1/operations/cHJvamVjdHMvZ3ltb3duZXItOGJlODIvbG9jYXRpb25zL3VzLWNlbnRyYWwxL29wZXJhdGlvbnMvb3BlcmF0aW9uLTE3NTE4NjA1Mjg1ODAtNjM5NGVkMDgwODg0Yi0xZWM0NDZlYS1lZDYzMWRhZA {"name":"operations/cHJvamVjdHMvZ3ltb3duZXItOGJlODIvbG9jYXRpb25zL3VzLWNlbnRyYWwxL29wZXJhdGlvbnMvb3BlcmF0aW9uLTE3NTE4NjA1Mjg1ODAtNjM5NGVkMDgwODg0Yi0xZWM0NDZlYS1lZDYzMWRhZA","metadata":{"@type":"type.googleapis.com/google.cloud.functions.v1.OperationMetadataV1","target":"projects/gymowner-8be82/locations/us-central1/functions/sendWelcomeEmail","type":"CREATE_FUNCTION","request":{"@type":"type.googleapis.com/google.cloud.functions.v1.CloudFunction","name":"projects/gymowner-8be82/locations/us-central1/functions/sendWelcomeEmail","eventTrigger":{"eventType":"providers/cloud.firestore/eventTypes/document.create","resource":"projects/gymowner-8be82/databases/(default)/documents/clients/{clientId}","failurePolicy":{}},"entryPoint":"sendWelcomeEmail","timeout":"60s","availableMemoryMb":256,"updateTime":"1970-01-01T00:00:00Z","labels":{"deployment-tool":"cli-firebase","firebase-functions-hash":"30fea97784f22d67d1648618dd2b05b664b2d9b6"},"sourceUploadUrl":"https://storage.googleapis.com/uploads-733192029053.us-central1.cloudfunctions.appspot.com/8f1451f0-00ac-4d28-a489-164cfa7e1ba0.zip?GoogleAccessId=service-1005011737804@gcf-admin-robot.iam.gserviceaccount.com&Expires=1751862314&Signature=VE70Eh6yEmpW3lVWbxUZ4BhrcImz1UQ40bSDPfP2AeT9242%2BR8TtSw%2FUbwTzDjQzBYMGE%2F3uS3gfw%2FXJ1Tx4NfF2%2BT4p2E2cssWfnfsCLc%2Fr6JNrrbSB%2F8ZN3YyMqjnoLSQuVDnPdcGDptx3zdZ3aY9VdcMfd%2BMVilsYSepr%2Bh5qCV5ETypPo3wv%2Fo5KwInewh7kS1rcgO61FjE7iwpwknRoxlxe2mTwWsQn68kjWO8nE%2Bh%2FWZSi9oRd%2Fxn663GrdT7DpYY4PvxfKnxpfXvKL4%2BdJ4BP%2BQRCcDRxFfml5guEEcP0S2BfnZKs8IQ2JqTnr1AyCxAMbDwnxWIR%2FdO%2F7Q%3D%3D","environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"gymowner-8be82\",\"databaseURL\":\"https://gymowner-8be82-default-rtdb.firebaseio.com\",\"storageBucket\":\"gymowner-8be82.firebasestorage.app\"}","GCLOUD_PROJECT":"gymowner-8be82","EVENTARC_CLOUD_EVENT_SOURCE":"projects/gymowner-8be82/locations/us-central1/functions/sendWelcomeEmail"},"runtime":"nodejs18","buildEnvironmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""},"dockerRegistry":"ARTIFACT_REGISTRY"},"versionId":"1","updateTime":"2025-07-07T03:55:29.066406357Z"}}
+[debug] [2025-07-07T03:55:28.948Z] [create-default-us-central1-sendWelcomeEmail] Retrying task index 0
+[debug] [2025-07-07T03:55:28.949Z] Checked if tokens are valid: true, expires at: 1751862240299
+[debug] [2025-07-07T03:55:28.949Z] Checked if tokens are valid: true, expires at: 1751862240299
+[debug] [2025-07-07T03:55:28.949Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v1/operations/cHJvamVjdHMvZ3ltb3duZXItOGJlODIvbG9jYXRpb25zL3VzLWNlbnRyYWwxL29wZXJhdGlvbnMvb3BlcmF0aW9uLTE3NTE4NjA1Mjg1ODAtNjM5NGVkMDgwODg0Yi0xZWM0NDZlYS1lZDYzMWRhZA [none]
+[debug] [2025-07-07T03:55:29.288Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v1/operations/cHJvamVjdHMvZ3ltb3duZXItOGJlODIvbG9jYXRpb25zL3VzLWNlbnRyYWwxL29wZXJhdGlvbnMvb3BlcmF0aW9uLTE3NTE4NjA1Mjg1ODAtNjM5NGVkMDgwODg0Yi0xZWM0NDZlYS1lZDYzMWRhZA 200
+[debug] [2025-07-07T03:55:29.288Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v1/operations/cHJvamVjdHMvZ3ltb3duZXItOGJlODIvbG9jYXRpb25zL3VzLWNlbnRyYWwxL29wZXJhdGlvbnMvb3BlcmF0aW9uLTE3NTE4NjA1Mjg1ODAtNjM5NGVkMDgwODg0Yi0xZWM0NDZlYS1lZDYzMWRhZA {"name":"operations/cHJvamVjdHMvZ3ltb3duZXItOGJlODIvbG9jYXRpb25zL3VzLWNlbnRyYWwxL29wZXJhdGlvbnMvb3BlcmF0aW9uLTE3NTE4NjA1Mjg1ODAtNjM5NGVkMDgwODg0Yi0xZWM0NDZlYS1lZDYzMWRhZA","metadata":{"@type":"type.googleapis.com/google.cloud.functions.v1.OperationMetadataV1","target":"projects/gymowner-8be82/locations/us-central1/functions/sendWelcomeEmail","type":"CREATE_FUNCTION","request":{"@type":"type.googleapis.com/google.cloud.functions.v1.CloudFunction","name":"projects/gymowner-8be82/locations/us-central1/functions/sendWelcomeEmail","eventTrigger":{"eventType":"providers/cloud.firestore/eventTypes/document.create","resource":"projects/gymowner-8be82/databases/(default)/documents/clients/{clientId}","failurePolicy":{}},"entryPoint":"sendWelcomeEmail","timeout":"60s","availableMemoryMb":256,"updateTime":"1970-01-01T00:00:00Z","labels":{"deployment-tool":"cli-firebase","firebase-functions-hash":"30fea97784f22d67d1648618dd2b05b664b2d9b6"},"sourceUploadUrl":"https://storage.googleapis.com/uploads-733192029053.us-central1.cloudfunctions.appspot.com/8f1451f0-00ac-4d28-a489-164cfa7e1ba0.zip?GoogleAccessId=service-1005011737804@gcf-admin-robot.iam.gserviceaccount.com&Expires=1751862314&Signature=VE70Eh6yEmpW3lVWbxUZ4BhrcImz1UQ40bSDPfP2AeT9242%2BR8TtSw%2FUbwTzDjQzBYMGE%2F3uS3gfw%2FXJ1Tx4NfF2%2BT4p2E2cssWfnfsCLc%2Fr6JNrrbSB%2F8ZN3YyMqjnoLSQuVDnPdcGDptx3zdZ3aY9VdcMfd%2BMVilsYSepr%2Bh5qCV5ETypPo3wv%2Fo5KwInewh7kS1rcgO61FjE7iwpwknRoxlxe2mTwWsQn68kjWO8nE%2Bh%2FWZSi9oRd%2Fxn663GrdT7DpYY4PvxfKnxpfXvKL4%2BdJ4BP%2BQRCcDRxFfml5guEEcP0S2BfnZKs8IQ2JqTnr1AyCxAMbDwnxWIR%2FdO%2F7Q%3D%3D","environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"gymowner-8be82\",\"databaseURL\":\"https://gymowner-8be82-default-rtdb.firebaseio.com\",\"storageBucket\":\"gymowner-8be82.firebasestorage.app\"}","GCLOUD_PROJECT":"gymowner-8be82","EVENTARC_CLOUD_EVENT_SOURCE":"projects/gymowner-8be82/locations/us-central1/functions/sendWelcomeEmail"},"runtime":"nodejs18","buildEnvironmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""},"dockerRegistry":"ARTIFACT_REGISTRY"},"versionId":"1","updateTime":"2025-07-07T03:55:29.066406357Z","buildId":"967e35e9-a386-4f5e-ac7f-8d805e2e5fe6","buildName":"projects/1005011737804/locations/us-central1/builds/967e35e9-a386-4f5e-ac7f-8d805e2e5fe6"}}
+[debug] [2025-07-07T03:55:31.302Z] [create-default-us-central1-sendWelcomeEmail] Retrying task index 0
+[debug] [2025-07-07T03:55:31.303Z] Checked if tokens are valid: true, expires at: 1751862240299
+[debug] [2025-07-07T03:55:31.303Z] Checked if tokens are valid: true, expires at: 1751862240299
+[debug] [2025-07-07T03:55:31.303Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v1/operations/cHJvamVjdHMvZ3ltb3duZXItOGJlODIvbG9jYXRpb25zL3VzLWNlbnRyYWwxL29wZXJhdGlvbnMvb3BlcmF0aW9uLTE3NTE4NjA1Mjg1ODAtNjM5NGVkMDgwODg0Yi0xZWM0NDZlYS1lZDYzMWRhZA [none]
+[debug] [2025-07-07T03:55:31.713Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v1/operations/cHJvamVjdHMvZ3ltb3duZXItOGJlODIvbG9jYXRpb25zL3VzLWNlbnRyYWwxL29wZXJhdGlvbnMvb3BlcmF0aW9uLTE3NTE4NjA1Mjg1ODAtNjM5NGVkMDgwODg0Yi0xZWM0NDZlYS1lZDYzMWRhZA 200
+[debug] [2025-07-07T03:55:31.713Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v1/operations/cHJvamVjdHMvZ3ltb3duZXItOGJlODIvbG9jYXRpb25zL3VzLWNlbnRyYWwxL29wZXJhdGlvbnMvb3BlcmF0aW9uLTE3NTE4NjA1Mjg1ODAtNjM5NGVkMDgwODg0Yi0xZWM0NDZlYS1lZDYzMWRhZA {"name":"operations/cHJvamVjdHMvZ3ltb3duZXItOGJlODIvbG9jYXRpb25zL3VzLWNlbnRyYWwxL29wZXJhdGlvbnMvb3BlcmF0aW9uLTE3NTE4NjA1Mjg1ODAtNjM5NGVkMDgwODg0Yi0xZWM0NDZlYS1lZDYzMWRhZA","metadata":{"@type":"type.googleapis.com/google.cloud.functions.v1.OperationMetadataV1","target":"projects/gymowner-8be82/locations/us-central1/functions/sendWelcomeEmail","type":"CREATE_FUNCTION","request":{"@type":"type.googleapis.com/google.cloud.functions.v1.CloudFunction","name":"projects/gymowner-8be82/locations/us-central1/functions/sendWelcomeEmail","eventTrigger":{"eventType":"providers/cloud.firestore/eventTypes/document.create","resource":"projects/gymowner-8be82/databases/(default)/documents/clients/{clientId}","failurePolicy":{}},"entryPoint":"sendWelcomeEmail","timeout":"60s","availableMemoryMb":256,"updateTime":"1970-01-01T00:00:00Z","labels":{"deployment-tool":"cli-firebase","firebase-functions-hash":"30fea97784f22d67d1648618dd2b05b664b2d9b6"},"sourceUploadUrl":"https://storage.googleapis.com/uploads-733192029053.us-central1.cloudfunctions.appspot.com/8f1451f0-00ac-4d28-a489-164cfa7e1ba0.zip?GoogleAccessId=service-1005011737804@gcf-admin-robot.iam.gserviceaccount.com&Expires=1751862314&Signature=VE70Eh6yEmpW3lVWbxUZ4BhrcImz1UQ40bSDPfP2AeT9242%2BR8TtSw%2FUbwTzDjQzBYMGE%2F3uS3gfw%2FXJ1Tx4NfF2%2BT4p2E2cssWfnfsCLc%2Fr6JNrrbSB%2F8ZN3YyMqjnoLSQuVDnPdcGDptx3zdZ3aY9VdcMfd%2BMVilsYSepr%2Bh5qCV5ETypPo3wv%2Fo5KwInewh7kS1rcgO61FjE7iwpwknRoxlxe2mTwWsQn68kjWO8nE%2Bh%2FWZSi9oRd%2Fxn663GrdT7DpYY4PvxfKnxpfXvKL4%2BdJ4BP%2BQRCcDRxFfml5guEEcP0S2BfnZKs8IQ2JqTnr1AyCxAMbDwnxWIR%2FdO%2F7Q%3D%3D","environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"gymowner-8be82\",\"databaseURL\":\"https://gymowner-8be82-default-rtdb.firebaseio.com\",\"storageBucket\":\"gymowner-8be82.firebasestorage.app\"}","GCLOUD_PROJECT":"gymowner-8be82","EVENTARC_CLOUD_EVENT_SOURCE":"projects/gymowner-8be82/locations/us-central1/functions/sendWelcomeEmail"},"runtime":"nodejs18","buildEnvironmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""},"dockerRegistry":"ARTIFACT_REGISTRY"},"versionId":"1","updateTime":"2025-07-07T03:55:29.066406357Z","buildId":"967e35e9-a386-4f5e-ac7f-8d805e2e5fe6","buildName":"projects/1005011737804/locations/us-central1/builds/967e35e9-a386-4f5e-ac7f-8d805e2e5fe6"}}
+[debug] [2025-07-07T03:55:35.727Z] [create-default-us-central1-sendWelcomeEmail] Retrying task index 0
+[debug] [2025-07-07T03:55:35.728Z] Checked if tokens are valid: true, expires at: 1751862240299
+[debug] [2025-07-07T03:55:35.728Z] Checked if tokens are valid: true, expires at: 1751862240299
+[debug] [2025-07-07T03:55:35.728Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v1/operations/cHJvamVjdHMvZ3ltb3duZXItOGJlODIvbG9jYXRpb25zL3VzLWNlbnRyYWwxL29wZXJhdGlvbnMvb3BlcmF0aW9uLTE3NTE4NjA1Mjg1ODAtNjM5NGVkMDgwODg0Yi0xZWM0NDZlYS1lZDYzMWRhZA [none]
+[debug] [2025-07-07T03:55:36.131Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v1/operations/cHJvamVjdHMvZ3ltb3duZXItOGJlODIvbG9jYXRpb25zL3VzLWNlbnRyYWwxL29wZXJhdGlvbnMvb3BlcmF0aW9uLTE3NTE4NjA1Mjg1ODAtNjM5NGVkMDgwODg0Yi0xZWM0NDZlYS1lZDYzMWRhZA 200
+[debug] [2025-07-07T03:55:36.131Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v1/operations/cHJvamVjdHMvZ3ltb3duZXItOGJlODIvbG9jYXRpb25zL3VzLWNlbnRyYWwxL29wZXJhdGlvbnMvb3BlcmF0aW9uLTE3NTE4NjA1Mjg1ODAtNjM5NGVkMDgwODg0Yi0xZWM0NDZlYS1lZDYzMWRhZA {"name":"operations/cHJvamVjdHMvZ3ltb3duZXItOGJlODIvbG9jYXRpb25zL3VzLWNlbnRyYWwxL29wZXJhdGlvbnMvb3BlcmF0aW9uLTE3NTE4NjA1Mjg1ODAtNjM5NGVkMDgwODg0Yi0xZWM0NDZlYS1lZDYzMWRhZA","metadata":{"@type":"type.googleapis.com/google.cloud.functions.v1.OperationMetadataV1","target":"projects/gymowner-8be82/locations/us-central1/functions/sendWelcomeEmail","type":"CREATE_FUNCTION","request":{"@type":"type.googleapis.com/google.cloud.functions.v1.CloudFunction","name":"projects/gymowner-8be82/locations/us-central1/functions/sendWelcomeEmail","eventTrigger":{"eventType":"providers/cloud.firestore/eventTypes/document.create","resource":"projects/gymowner-8be82/databases/(default)/documents/clients/{clientId}","failurePolicy":{}},"entryPoint":"sendWelcomeEmail","timeout":"60s","availableMemoryMb":256,"updateTime":"1970-01-01T00:00:00Z","labels":{"deployment-tool":"cli-firebase","firebase-functions-hash":"30fea97784f22d67d1648618dd2b05b664b2d9b6"},"sourceUploadUrl":"https://storage.googleapis.com/uploads-733192029053.us-central1.cloudfunctions.appspot.com/8f1451f0-00ac-4d28-a489-164cfa7e1ba0.zip?GoogleAccessId=service-1005011737804@gcf-admin-robot.iam.gserviceaccount.com&Expires=1751862314&Signature=VE70Eh6yEmpW3lVWbxUZ4BhrcImz1UQ40bSDPfP2AeT9242%2BR8TtSw%2FUbwTzDjQzBYMGE%2F3uS3gfw%2FXJ1Tx4NfF2%2BT4p2E2cssWfnfsCLc%2Fr6JNrrbSB%2F8ZN3YyMqjnoLSQuVDnPdcGDptx3zdZ3aY9VdcMfd%2BMVilsYSepr%2Bh5qCV5ETypPo3wv%2Fo5KwInewh7kS1rcgO61FjE7iwpwknRoxlxe2mTwWsQn68kjWO8nE%2Bh%2FWZSi9oRd%2Fxn663GrdT7DpYY4PvxfKnxpfXvKL4%2BdJ4BP%2BQRCcDRxFfml5guEEcP0S2BfnZKs8IQ2JqTnr1AyCxAMbDwnxWIR%2FdO%2F7Q%3D%3D","environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"gymowner-8be82\",\"databaseURL\":\"https://gymowner-8be82-default-rtdb.firebaseio.com\",\"storageBucket\":\"gymowner-8be82.firebasestorage.app\"}","GCLOUD_PROJECT":"gymowner-8be82","EVENTARC_CLOUD_EVENT_SOURCE":"projects/gymowner-8be82/locations/us-central1/functions/sendWelcomeEmail"},"runtime":"nodejs18","buildEnvironmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""},"dockerRegistry":"ARTIFACT_REGISTRY"},"versionId":"1","updateTime":"2025-07-07T03:55:29.066406357Z","buildId":"967e35e9-a386-4f5e-ac7f-8d805e2e5fe6","buildName":"projects/1005011737804/locations/us-central1/builds/967e35e9-a386-4f5e-ac7f-8d805e2e5fe6"}}
+[debug] [2025-07-07T03:55:44.147Z] [create-default-us-central1-sendWelcomeEmail] Retrying task index 0
+[debug] [2025-07-07T03:55:44.147Z] Checked if tokens are valid: true, expires at: 1751862240299
+[debug] [2025-07-07T03:55:44.147Z] Checked if tokens are valid: true, expires at: 1751862240299
+[debug] [2025-07-07T03:55:44.148Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v1/operations/cHJvamVjdHMvZ3ltb3duZXItOGJlODIvbG9jYXRpb25zL3VzLWNlbnRyYWwxL29wZXJhdGlvbnMvb3BlcmF0aW9uLTE3NTE4NjA1Mjg1ODAtNjM5NGVkMDgwODg0Yi0xZWM0NDZlYS1lZDYzMWRhZA [none]
+[debug] [2025-07-07T03:55:44.629Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v1/operations/cHJvamVjdHMvZ3ltb3duZXItOGJlODIvbG9jYXRpb25zL3VzLWNlbnRyYWwxL29wZXJhdGlvbnMvb3BlcmF0aW9uLTE3NTE4NjA1Mjg1ODAtNjM5NGVkMDgwODg0Yi0xZWM0NDZlYS1lZDYzMWRhZA 200
+[debug] [2025-07-07T03:55:44.630Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v1/operations/cHJvamVjdHMvZ3ltb3duZXItOGJlODIvbG9jYXRpb25zL3VzLWNlbnRyYWwxL29wZXJhdGlvbnMvb3BlcmF0aW9uLTE3NTE4NjA1Mjg1ODAtNjM5NGVkMDgwODg0Yi0xZWM0NDZlYS1lZDYzMWRhZA {"name":"operations/cHJvamVjdHMvZ3ltb3duZXItOGJlODIvbG9jYXRpb25zL3VzLWNlbnRyYWwxL29wZXJhdGlvbnMvb3BlcmF0aW9uLTE3NTE4NjA1Mjg1ODAtNjM5NGVkMDgwODg0Yi0xZWM0NDZlYS1lZDYzMWRhZA","metadata":{"@type":"type.googleapis.com/google.cloud.functions.v1.OperationMetadataV1","target":"projects/gymowner-8be82/locations/us-central1/functions/sendWelcomeEmail","type":"CREATE_FUNCTION","request":{"@type":"type.googleapis.com/google.cloud.functions.v1.CloudFunction","name":"projects/gymowner-8be82/locations/us-central1/functions/sendWelcomeEmail","eventTrigger":{"eventType":"providers/cloud.firestore/eventTypes/document.create","resource":"projects/gymowner-8be82/databases/(default)/documents/clients/{clientId}","failurePolicy":{}},"entryPoint":"sendWelcomeEmail","timeout":"60s","availableMemoryMb":256,"updateTime":"1970-01-01T00:00:00Z","labels":{"deployment-tool":"cli-firebase","firebase-functions-hash":"30fea97784f22d67d1648618dd2b05b664b2d9b6"},"sourceUploadUrl":"https://storage.googleapis.com/uploads-733192029053.us-central1.cloudfunctions.appspot.com/8f1451f0-00ac-4d28-a489-164cfa7e1ba0.zip?GoogleAccessId=service-1005011737804@gcf-admin-robot.iam.gserviceaccount.com&Expires=1751862314&Signature=VE70Eh6yEmpW3lVWbxUZ4BhrcImz1UQ40bSDPfP2AeT9242%2BR8TtSw%2FUbwTzDjQzBYMGE%2F3uS3gfw%2FXJ1Tx4NfF2%2BT4p2E2cssWfnfsCLc%2Fr6JNrrbSB%2F8ZN3YyMqjnoLSQuVDnPdcGDptx3zdZ3aY9VdcMfd%2BMVilsYSepr%2Bh5qCV5ETypPo3wv%2Fo5KwInewh7kS1rcgO61FjE7iwpwknRoxlxe2mTwWsQn68kjWO8nE%2Bh%2FWZSi9oRd%2Fxn663GrdT7DpYY4PvxfKnxpfXvKL4%2BdJ4BP%2BQRCcDRxFfml5guEEcP0S2BfnZKs8IQ2JqTnr1AyCxAMbDwnxWIR%2FdO%2F7Q%3D%3D","environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"gymowner-8be82\",\"databaseURL\":\"https://gymowner-8be82-default-rtdb.firebaseio.com\",\"storageBucket\":\"gymowner-8be82.firebasestorage.app\"}","GCLOUD_PROJECT":"gymowner-8be82","EVENTARC_CLOUD_EVENT_SOURCE":"projects/gymowner-8be82/locations/us-central1/functions/sendWelcomeEmail"},"runtime":"nodejs18","buildEnvironmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""},"dockerRegistry":"ARTIFACT_REGISTRY"},"versionId":"1","updateTime":"2025-07-07T03:55:29.066406357Z","buildId":"967e35e9-a386-4f5e-ac7f-8d805e2e5fe6","buildName":"projects/1005011737804/locations/us-central1/builds/967e35e9-a386-4f5e-ac7f-8d805e2e5fe6"}}
+[debug] [2025-07-07T03:55:54.641Z] [create-default-us-central1-sendWelcomeEmail] Retrying task index 0
+[debug] [2025-07-07T03:55:54.641Z] Checked if tokens are valid: true, expires at: 1751862240299
+[debug] [2025-07-07T03:55:54.641Z] Checked if tokens are valid: true, expires at: 1751862240299
+[debug] [2025-07-07T03:55:54.641Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v1/operations/cHJvamVjdHMvZ3ltb3duZXItOGJlODIvbG9jYXRpb25zL3VzLWNlbnRyYWwxL29wZXJhdGlvbnMvb3BlcmF0aW9uLTE3NTE4NjA1Mjg1ODAtNjM5NGVkMDgwODg0Yi0xZWM0NDZlYS1lZDYzMWRhZA [none]
+[debug] [2025-07-07T03:55:55.093Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v1/operations/cHJvamVjdHMvZ3ltb3duZXItOGJlODIvbG9jYXRpb25zL3VzLWNlbnRyYWwxL29wZXJhdGlvbnMvb3BlcmF0aW9uLTE3NTE4NjA1Mjg1ODAtNjM5NGVkMDgwODg0Yi0xZWM0NDZlYS1lZDYzMWRhZA 200
+[debug] [2025-07-07T03:55:55.093Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v1/operations/cHJvamVjdHMvZ3ltb3duZXItOGJlODIvbG9jYXRpb25zL3VzLWNlbnRyYWwxL29wZXJhdGlvbnMvb3BlcmF0aW9uLTE3NTE4NjA1Mjg1ODAtNjM5NGVkMDgwODg0Yi0xZWM0NDZlYS1lZDYzMWRhZA {"name":"operations/cHJvamVjdHMvZ3ltb3duZXItOGJlODIvbG9jYXRpb25zL3VzLWNlbnRyYWwxL29wZXJhdGlvbnMvb3BlcmF0aW9uLTE3NTE4NjA1Mjg1ODAtNjM5NGVkMDgwODg0Yi0xZWM0NDZlYS1lZDYzMWRhZA","metadata":{"@type":"type.googleapis.com/google.cloud.functions.v1.OperationMetadataV1","target":"projects/gymowner-8be82/locations/us-central1/functions/sendWelcomeEmail","type":"CREATE_FUNCTION","request":{"@type":"type.googleapis.com/google.cloud.functions.v1.CloudFunction","name":"projects/gymowner-8be82/locations/us-central1/functions/sendWelcomeEmail","eventTrigger":{"eventType":"providers/cloud.firestore/eventTypes/document.create","resource":"projects/gymowner-8be82/databases/(default)/documents/clients/{clientId}","failurePolicy":{}},"entryPoint":"sendWelcomeEmail","timeout":"60s","availableMemoryMb":256,"updateTime":"1970-01-01T00:00:00Z","labels":{"deployment-tool":"cli-firebase","firebase-functions-hash":"30fea97784f22d67d1648618dd2b05b664b2d9b6"},"sourceUploadUrl":"https://storage.googleapis.com/uploads-733192029053.us-central1.cloudfunctions.appspot.com/8f1451f0-00ac-4d28-a489-164cfa7e1ba0.zip?GoogleAccessId=service-1005011737804@gcf-admin-robot.iam.gserviceaccount.com&Expires=1751862314&Signature=VE70Eh6yEmpW3lVWbxUZ4BhrcImz1UQ40bSDPfP2AeT9242%2BR8TtSw%2FUbwTzDjQzBYMGE%2F3uS3gfw%2FXJ1Tx4NfF2%2BT4p2E2cssWfnfsCLc%2Fr6JNrrbSB%2F8ZN3YyMqjnoLSQuVDnPdcGDptx3zdZ3aY9VdcMfd%2BMVilsYSepr%2Bh5qCV5ETypPo3wv%2Fo5KwInewh7kS1rcgO61FjE7iwpwknRoxlxe2mTwWsQn68kjWO8nE%2Bh%2FWZSi9oRd%2Fxn663GrdT7DpYY4PvxfKnxpfXvKL4%2BdJ4BP%2BQRCcDRxFfml5guEEcP0S2BfnZKs8IQ2JqTnr1AyCxAMbDwnxWIR%2FdO%2F7Q%3D%3D","environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"gymowner-8be82\",\"databaseURL\":\"https://gymowner-8be82-default-rtdb.firebaseio.com\",\"storageBucket\":\"gymowner-8be82.firebasestorage.app\"}","GCLOUD_PROJECT":"gymowner-8be82","EVENTARC_CLOUD_EVENT_SOURCE":"projects/gymowner-8be82/locations/us-central1/functions/sendWelcomeEmail"},"runtime":"nodejs18","buildEnvironmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""},"dockerRegistry":"ARTIFACT_REGISTRY"},"versionId":"1","updateTime":"2025-07-07T03:55:59.804953074Z","buildId":"967e35e9-a386-4f5e-ac7f-8d805e2e5fe6","buildName":"projects/1005011737804/locations/us-central1/builds/967e35e9-a386-4f5e-ac7f-8d805e2e5fe6"},"done":true,"error":{"code":3,"message":"Gen1 operation for function projects/gymowner-8be82/locations/us-central1/functions/sendWelcomeEmail failed: Build failed: npm error code ERESOLVE\nnpm error ERESOLVE could not resolve\nnpm error\nnpm error While resolving: firebase-functions-test@3.4.1\nnpm error Found: firebase-functions@3.20.1\nnpm error node_modules/firebase-functions\nnpm error   firebase-functions@\"^3.20.1\" from the root project\nnpm error\nnpm error Could not resolve dependency:\nnpm error peer firebase-functions@\">=4.9.0\" from firebase-functions-test@3.4.1\nnpm error node_modules/firebase-functions-test\nnpm error   dev firebase-functions-test@\"^3.1.0\" from the root project\nnpm error\nnpm error Conflicting peer dependency: firebase-functions@6.3.2\nnpm error node_modules/firebase-functions\nnpm error   peer firebase-functions@\">=4.9.0\" from firebase-functions-test@3.4.1\nnpm error   node_modules/firebase-functions-test\nnpm error     dev firebase-functions-test@\"^3.1.0\" from the root project\nnpm error\nnpm error Fix the upstream dependency conflict, or retry\nnpm error this command with --force or --legacy-peer-deps\nnpm error to accept an incorrect (and potentially broken) dependency resolution.\nnpm error\nnpm error\nnpm error For a full report see:\nnpm error /www-data-home/.npm/_logs/2025-07-07T03_55_51_665Z-eresolve-report.txt\nnpm error A complete log of this run can be found in: /www-data-home/.npm/_logs/2025-07-07T03_55_51_665Z-debug-0.log; Error ID: 7fa33aaa."}}
+[debug] [2025-07-07T03:55:55.093Z] Got source token undefined for region us-central1
+[error] Gen1 operation for function projects/gymowner-8be82/locations/us-central1/functions/sendWelcomeEmail failed: Build failed: npm error code ERESOLVE
+npm error ERESOLVE could not resolve
+npm error
+npm error While resolving: firebase-functions-test@3.4.1
+npm error Found: firebase-functions@3.20.1
+npm error node_modules/firebase-functions
+npm error   firebase-functions@"^3.20.1" from the root project
+npm error
+npm error Could not resolve dependency:
+npm error peer firebase-functions@">=4.9.0" from firebase-functions-test@3.4.1
+npm error node_modules/firebase-functions-test
+npm error   dev firebase-functions-test@"^3.1.0" from the root project
+npm error
+npm error Conflicting peer dependency: firebase-functions@6.3.2
+npm error node_modules/firebase-functions
+npm error   peer firebase-functions@">=4.9.0" from firebase-functions-test@3.4.1
+npm error   node_modules/firebase-functions-test
+npm error     dev firebase-functions-test@"^3.1.0" from the root project
+npm error
+npm error Fix the upstream dependency conflict, or retry
+npm error this command with --force or --legacy-peer-deps
+npm error to accept an incorrect (and potentially broken) dependency resolution.
+npm error
+npm error
+npm error For a full report see:
+npm error /www-data-home/.npm/_logs/2025-07-07T03_55_51_665Z-eresolve-report.txt
+npm error A complete log of this run can be found in: /www-data-home/.npm/_logs/2025-07-07T03_55_51_665Z-debug-0.log; Error ID: 7fa33aaa.
+[debug] [2025-07-07T03:55:55.102Z] Total Function Deployment time: 32417
+[debug] [2025-07-07T03:55:55.102Z] 1 Functions Deployed
+[debug] [2025-07-07T03:55:55.102Z] 1 Functions Errored
+[debug] [2025-07-07T03:55:55.102Z] 0 Function Deployments Aborted
+[debug] [2025-07-07T03:55:55.102Z] Average Function Deployment time: 32416
+[info] 
+[info] Functions deploy had errors with the following functions:
+	sendWelcomeEmail(us-central1)
+[debug] [2025-07-07T03:55:55.193Z] Checked if tokens are valid: true, expires at: 1751862240299
+[debug] [2025-07-07T03:55:55.193Z] Checked if tokens are valid: true, expires at: 1751862240299
+[debug] [2025-07-07T03:55:55.194Z] >>> [apiv2][query] GET https://artifactregistry.googleapis.com/v1/projects/gymowner-8be82/locations/us-central1/repositories/gcf-artifacts [none]
+[debug] [2025-07-07T03:55:56.573Z] <<< [apiv2][status] GET https://artifactregistry.googleapis.com/v1/projects/gymowner-8be82/locations/us-central1/repositories/gcf-artifacts 200
+[debug] [2025-07-07T03:55:56.573Z] <<< [apiv2][body] GET https://artifactregistry.googleapis.com/v1/projects/gymowner-8be82/locations/us-central1/repositories/gcf-artifacts {"name":"projects/gymowner-8be82/locations/us-central1/repositories/gcf-artifacts","format":"DOCKER","description":"This repository is created and used by Cloud Functions for storing function docker images.","labels":{"goog-managed-by":"cloudfunctions"},"createTime":"2025-07-04T07:32:33.911483Z","updateTime":"2025-07-05T13:38:57.732863Z","mode":"STANDARD_REPOSITORY","cleanupPolicies":{"firebase-functions-cleanup":{"id":"firebase-functions-cleanup","action":"DELETE","condition":{"tagState":"ANY","olderThan":"86400s"}}},"vulnerabilityScanningConfig":{"lastEnableTime":"2025-07-04T07:32:25.261153622Z","enablementState":"SCANNING_DISABLED","enablementStateReason":"API containerscanning.googleapis.com is not enabled."},"satisfiesPzi":true,"registryUri":"us-central1-docker.pkg.dev/gymowner-8be82/gcf-artifacts"}
+[debug] [2025-07-07T03:55:56.574Z] Functions deploy failed.
+[debug] [2025-07-07T03:55:56.574Z] {
+  "endpoint": {
+    "id": "sendWelcomeEmail",
+    "project": "gymowner-8be82",
+    "region": "us-central1",
+    "entryPoint": "sendWelcomeEmail",
+    "platform": "gcfv1",
+    "runtime": "nodejs18",
+    "eventTrigger": {
+      "eventType": "providers/cloud.firestore/eventTypes/document.create",
+      "retry": false,
+      "eventFilters": {
+        "resource": "projects/gymowner-8be82/databases/(default)/documents/clients/{clientId}"
+      }
+    },
+    "labels": {
+      "deployment-tool": "cli-firebase"
+    },
+    "availableMemoryMb": 256,
+    "timeoutSeconds": 60,
+    "environmentVariables": {
+      "FIREBASE_CONFIG": "{\"projectId\":\"gymowner-8be82\",\"databaseURL\":\"https://gymowner-8be82-default-rtdb.firebaseio.com\",\"storageBucket\":\"gymowner-8be82.firebasestorage.app\"}",
+      "GCLOUD_PROJECT": "gymowner-8be82",
+      "EVENTARC_CLOUD_EVENT_SOURCE": "projects/gymowner-8be82/locations/us-central1/functions/sendWelcomeEmail"
+    },
+    "codebase": "default",
+    "targetedByOnly": false,
+    "hash": "30fea97784f22d67d1648618dd2b05b664b2d9b6"
+  },
+  "op": "create",
+  "original": {
+    "name": "FirebaseError",
+    "children": [],
+    "exit": 1,
+    "message": "Gen1 operation for function projects/gymowner-8be82/locations/us-central1/functions/sendWelcomeEmail failed: Build failed: npm error code ERESOLVE\nnpm error ERESOLVE could not resolve\nnpm error\nnpm error While resolving: firebase-functions-test@3.4.1\nnpm error Found: firebase-functions@3.20.1\nnpm error node_modules/firebase-functions\nnpm error   firebase-functions@\"^3.20.1\" from the root project\nnpm error\nnpm error Could not resolve dependency:\nnpm error peer firebase-functions@\">=4.9.0\" from firebase-functions-test@3.4.1\nnpm error node_modules/firebase-functions-test\nnpm error   dev firebase-functions-test@\"^3.1.0\" from the root project\nnpm error\nnpm error Conflicting peer dependency: firebase-functions@6.3.2\nnpm error node_modules/firebase-functions\nnpm error   peer firebase-functions@\">=4.9.0\" from firebase-functions-test@3.4.1\nnpm error   node_modules/firebase-functions-test\nnpm error     dev firebase-functions-test@\"^3.1.0\" from the root project\nnpm error\nnpm error Fix the upstream dependency conflict, or retry\nnpm error this command with --force or --legacy-peer-deps\nnpm error to accept an incorrect (and potentially broken) dependency resolution.\nnpm error\nnpm error\nnpm error For a full report see:\nnpm error /www-data-home/.npm/_logs/2025-07-07T03_55_51_665Z-eresolve-report.txt\nnpm error A complete log of this run can be found in: /www-data-home/.npm/_logs/2025-07-07T03_55_51_665Z-debug-0.log; Error ID: 7fa33aaa.",
+    "original": {
+      "code": 3,
+      "message": "Gen1 operation for function projects/gymowner-8be82/locations/us-central1/functions/sendWelcomeEmail failed: Build failed: npm error code ERESOLVE\nnpm error ERESOLVE could not resolve\nnpm error\nnpm error While resolving: firebase-functions-test@3.4.1\nnpm error Found: firebase-functions@3.20.1\nnpm error node_modules/firebase-functions\nnpm error   firebase-functions@\"^3.20.1\" from the root project\nnpm error\nnpm error Could not resolve dependency:\nnpm error peer firebase-functions@\">=4.9.0\" from firebase-functions-test@3.4.1\nnpm error node_modules/firebase-functions-test\nnpm error   dev firebase-functions-test@\"^3.1.0\" from the root project\nnpm error\nnpm error Conflicting peer dependency: firebase-functions@6.3.2\nnpm error node_modules/firebase-functions\nnpm error   peer firebase-functions@\">=4.9.0\" from firebase-functions-test@3.4.1\nnpm error   node_modules/firebase-functions-test\nnpm error     dev firebase-functions-test@\"^3.1.0\" from the root project\nnpm error\nnpm error Fix the upstream dependency conflict, or retry\nnpm error this command with --force or --legacy-peer-deps\nnpm error to accept an incorrect (and potentially broken) dependency resolution.\nnpm error\nnpm error\nnpm error For a full report see:\nnpm error /www-data-home/.npm/_logs/2025-07-07T03_55_51_665Z-eresolve-report.txt\nnpm error A complete log of this run can be found in: /www-data-home/.npm/_logs/2025-07-07T03_55_51_665Z-debug-0.log; Error ID: 7fa33aaa."
+    },
+    "status": 3,
+    "code": 3
+  }
+}
+[debug] [2025-07-07T03:55:56.617Z] Error: Failed to create function sendWelcomeEmail in region us-central1
+    at C:\Users\ramsk\AppData\Roaming\npm\node_modules\firebase-tools\lib\deploy\functions\release\fabricator.js:52:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Fabricator.createV1Function (C:\Users\ramsk\AppData\Roaming\npm\node_modules\firebase-tools\lib\deploy\functions\release\fabricator.js:182:32)
+    at async Fabricator.createEndpoint (C:\Users\ramsk\AppData\Roaming\npm\node_modules\firebase-tools\lib\deploy\functions\release\fabricator.js:134:13)
+    at async handle (C:\Users\ramsk\AppData\Roaming\npm\node_modules\firebase-tools\lib\deploy\functions\release\fabricator.js:89:17)
+[error] 
+[error] Error: There was an error deploying functions
