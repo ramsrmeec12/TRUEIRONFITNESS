@@ -3,6 +3,8 @@ import { collection, addDoc } from "firebase/firestore";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { db } from "../firebase";
 import emailjs from "@emailjs/browser";
+import { Timestamp } from "firebase/firestore";
+
 
 export default function AddClient() {
   const [formData, setFormData] = useState({
@@ -13,10 +15,12 @@ export default function AddClient() {
     dob: "",
     gender: "",
     transformationType: "",
+    transformationName: "", // <-- new field
     dietType: "",
     height: "",
     weight: "",
   });
+
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -47,8 +51,11 @@ export default function AddClient() {
       // Step 1: Create user in Firebase Authentication
       await createUserWithEmailAndPassword(auth, formData.email, formData.password);
 
-      // Step 2: Store data in Firestore
-      await addDoc(collection(db, "clients"), formData);
+      // Step 2: Store data in Firestore with creation timestamp
+      await addDoc(collection(db, "clients"), {
+        ...formData,
+        createdAt: Timestamp.now(),
+      });
 
       // Step 3: Send welcome email
       await sendEmail();
@@ -62,6 +69,7 @@ export default function AddClient() {
         dob: "",
         gender: "",
         transformationType: "",
+        transformationName: "",
         dietType: "",
         height: "",
         weight: "",
@@ -71,6 +79,7 @@ export default function AddClient() {
       alert("Error: " + error.message);
     }
   };
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-700 flex items-center justify-center p-4">
@@ -103,6 +112,16 @@ export default function AddClient() {
           </select>
           <input name="height" type="number" placeholder="Height (cm)" value={formData.height} onChange={handleChange} className="input" required />
           <input name="weight" type="number" placeholder="Weight (kg)" value={formData.weight} onChange={handleChange} className="input" required />
+          <input
+            name="transformationName"
+            type="text"
+            placeholder="Transformation Name (e.g. 100 Days Challenge)"
+            value={formData.transformationName}
+            onChange={handleChange}
+            className="input"
+            required
+          />
+
           <button type="submit" className="col-span-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-xl transition-all">
             Add Client
           </button>

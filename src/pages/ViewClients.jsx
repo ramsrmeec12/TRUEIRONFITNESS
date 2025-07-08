@@ -2,11 +2,27 @@ import { useEffect, useState } from "react";
 import { collection, getDocs, doc, updateDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { db } from "../firebase";
+import { deleteDoc } from "firebase/firestore";
 
 export default function ViewClients() {
   const [clients, setClients] = useState([]);
   const [editingClient, setEditingClient] = useState(null);
   const navigate = useNavigate();
+
+  const handleDelete = async (e, id) => {
+    e.stopPropagation(); // Prevent navigation
+    const confirmDelete = window.confirm("Are you sure you want to delete this client?");
+    if (!confirmDelete) return;
+
+    try {
+      await deleteDoc(doc(db, "clients", id));
+      setClients(prev => prev.filter(client => client.id !== id));
+      alert("Client deleted successfully!");
+    } catch (error) {
+      console.error("Error deleting client:", error);
+      alert("Error deleting client. Try again.");
+    }
+  };
 
   const fetchClients = async () => {
     const snapshot = await getDocs(collection(db, "clients"));
@@ -51,13 +67,17 @@ export default function ViewClients() {
               <th className="px-4 py-3">Email</th>
               <th className="px-4 py-3">Gender</th>
               <th className="px-4 py-3">Type</th>
+              <th className="px-4 py-3">Diet</th> {/* ✅ Added */}
               <th className="px-4 py-3">Height</th>
               <th className="px-4 py-3">Weight</th>
+              <th className="px-4 py-3">Transformation Name</th>
+
               <th className="px-4 py-3">BMI</th>
               <th className="px-4 py-3">Status</th>
               <th className="px-4 py-3">Actions</th>
             </tr>
           </thead>
+
           <tbody>
             {clientsToRender.map(client => (
               <tr
@@ -70,8 +90,11 @@ export default function ViewClients() {
                 <td className="px-4 py-2">{client.email}</td>
                 <td className="px-4 py-2">{client.gender}</td>
                 <td className="px-4 py-2">{client.transformationType}</td>
+                <td className="px-4 py-2 capitalize">{client.dietType || "N/A"}</td> {/* ✅ Added */}
                 <td className="px-4 py-2">{client.height} cm</td>
                 <td className="px-4 py-2">{client.weight} kg</td>
+                <td className="px-4 py-2">{client.transformationName || "N/A"}</td>
+
                 <td className="px-4 py-2">
                   {client.height && client.weight ? (() => {
                     const bmi = client.weight / Math.pow(client.height / 100, 2);
@@ -85,7 +108,7 @@ export default function ViewClients() {
                     <span className="text-yellow-700 text-xs bg-yellow-100 px-2 py-1 rounded">Active</span>
                   )}
                 </td>
-                <td className="px-4 py-2">
+                <td className="px-4 py-2 flex gap-2">
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
@@ -95,10 +118,17 @@ export default function ViewClients() {
                   >
                     Edit
                   </button>
+                  <button
+                    onClick={(e) => handleDelete(e, client.id)}
+                    className="bg-red-600 hover:bg-red-700 text-white text-xs px-3 py-1 rounded"
+                  >
+                    Delete
+                  </button>
                 </td>
               </tr>
             ))}
           </tbody>
+
         </table>
       </div>
     </div>
@@ -149,6 +179,14 @@ export default function ViewClients() {
                 <option value="active">Active</option>
                 <option value="completed">Completed</option>
               </select>
+              <input
+                name="transformationName"
+                value={editingClient.transformationName || ""}
+                onChange={handleInputChange}
+                placeholder="Transformation Name"
+                className="border rounded px-3 py-2"
+              />
+
             </div>
             <div className="mt-4 flex justify-end gap-3">
               <button onClick={() => setEditingClient(null)} className="bg-gray-300 hover:bg-gray-400 px-4 py-2 rounded">

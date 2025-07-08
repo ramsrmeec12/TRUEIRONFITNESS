@@ -25,6 +25,7 @@ export default function ClientProfile() {
   const [selectedMusclesPerDay, setSelectedMusclesPerDay] = useState({});
   const [assignedWorkoutsPerDay, setAssignedWorkoutsPerDay] = useState({});
   const [workoutOptionsMap, setWorkoutOptionsMap] = useState({});
+  const [planDates, setPlanDates] = useState({ from: "", to: "" });
 
 
 
@@ -39,6 +40,14 @@ export default function ClientProfile() {
       const clientSnap = await getDoc(doc(db, "clients", id));
       const clientData = clientSnap.data();
       setClient(clientData);
+
+      
+
+
+
+      if (clientData.planDates) {
+        setPlanDates(clientData.planDates);
+      }
 
 
       // Load assigned food
@@ -86,6 +95,15 @@ export default function ClientProfile() {
 
     fetchData();
   }, [id]);
+  
+  const getActiveDays = () => {
+        if (!client?.createdAt) return "-";
+        const createdDate = client.createdAt.toDate(); // convert Firestore Timestamp to JS Date
+        const today = new Date();
+        const diffTime = today - createdDate;
+        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)); // convert ms to days
+        return diffDays;
+      };
 
   const fetchWorkoutsByMuscle = async (muscle) => {
     if (!muscle) return [];
@@ -127,9 +145,11 @@ export default function ClientProfile() {
       assignedEssentials,
       assignedWorkoutPerDay: assignedWorkoutsPerDay,
       selectedMusclesPerDay,
+      planDates, // <-- add this
     });
     alert("✅ Plan saved!");
   };
+
 
 
   const getTotalCaloriesAndMacros = () => {
@@ -161,12 +181,47 @@ export default function ClientProfile() {
       <h2 className="text-3xl font-bold text-center mb-6">
         Assign Food & Workout for {client.name}
       </h2>
+      {client.transformationType && (
+        <div className="text-center text-red-600 text-4xl font-semibold mb-6">
+          {client.transformationName}
+        </div>
+      )}
+
 
       <div className="bg-yellow-50 p-4 rounded-xl shadow-md text-center mb-8">
         <h4 className="text-xl font-semibold">🍽️ Daily Nutrition Summary</h4>
         <p>Calories: <strong>{calories}</strong> kcal</p>
         <p>Protein: <strong>{protein}</strong> g | Carbs: <strong>{carbs}</strong> g | Fat: <strong>{fat}</strong> g</p>
       </div>
+
+      <div className="text-center text-sm text-gray-700 mb-6">
+        Client active for: <span className="text-red-600 font-semibold">{getActiveDays()}</span> days
+      </div>
+
+
+      <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mt-3 mb-5">
+        <div>
+          <label className="font-medium mr-2">Diet and Workout For:</label>
+          <input
+            type="date"
+            value={planDates.from}
+            onChange={(e) => setPlanDates((prev) => ({ ...prev, from: e.target.value }))}
+            className="border rounded p-1"
+          />
+        </div>
+        <div>
+          <label className="font-medium mr-2">To:</label>
+          <input
+            type="date"
+            value={planDates.to}
+            onChange={(e) => setPlanDates((prev) => ({ ...prev, to: e.target.value }))}
+            className="border rounded p-1"
+          />
+        </div>
+      </div>
+
+
+
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
         {meals.map(meal => (
@@ -420,13 +475,19 @@ export default function ClientProfile() {
       <div className="text-center mb-8">
         <button
           onClick={() =>
-            generateDietPlanPdf(client, assignedFood, assignedEssentials, assignedWorkoutsPerDay)
-
+            generateDietPlanPdf(
+              client,
+              assignedFood,
+              assignedEssentials,
+              assignedWorkoutsPerDay,
+              planDates // <-- new
+            )
           }
           className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-xl"
         >
           📄 Generate PDF Plan
         </button>
+
       </div>
 
 

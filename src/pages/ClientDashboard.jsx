@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { generateDietPlanPdf } from "../utils/generateDietPlanPdf";
 import {
   collection,
   query,
   where,
   getDocs,
 } from "firebase/firestore";
-import { getAuth, signOut } from "firebase/auth";
+import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
 import { db } from "../firebase";
 
 function useQuery() {
@@ -19,21 +20,30 @@ export default function ClientDashboard() {
   const workoutDaysOrder = ["Day 1", "Day 2", "Day 3", "Day 4", "Day 5", "Day 6"];
   const queryParams = useQuery();
   const email = queryParams.get("email");
-  const today = new Date().toISOString().split("T")[0];
   const navigate = useNavigate();
 
   useEffect(() => {
+    const auth = getAuth();
+
+    // Check if user is logged in
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        navigate("/client-login");
+      }
+    });
+
     const fetchClient = async () => {
+      if (!email) return;
       const q = query(collection(db, "clients"), where("email", "==", email));
       const snapshot = await getDocs(q);
       const docData = snapshot.docs[0];
       if (docData) setClientData({ id: docData.id, ...docData.data() });
     };
 
-    if (email) {
-      fetchClient();
-    }
-  }, [email, today]);
+    fetchClient();
+
+    return () => unsubscribe();
+  }, [email, navigate]);
 
   const handleLogout = async () => {
     try {
@@ -44,11 +54,16 @@ export default function ClientDashboard() {
     }
   };
 
+  function formatDate(isoString) {
+    const [year, month, day] = isoString.split("-");
+    return `${day}-${month}-${year}`;
+  }
+
+
   const renderFoodSection = () => {
     const foodData = clientData.assignedFood || {};
     const essentialsData = clientData.assignedEssentials || {};
-
-    const meals = mealOrder.filter(meal => foodData[meal]); // Only keep defined meals
+    const meals = mealOrder.filter(meal => foodData[meal]);
 
     if (meals.length === 0) return <p>No food plan assigned.</p>;
 
@@ -64,16 +79,15 @@ export default function ClientDashboard() {
         </ul>
 
         <div className="ml-4">
-          <strong className="block text-sm text-gray-700 mb-1">Essentials:</strong>
+          <strong className="block text-sm  mb-1">Essentials:</strong>
           {(essentialsData[meal]?.length > 0) ? (
-            <ul className="list-disc list-inside text-sm text-gray-800 space-y-1">
+            <ul className="list-disc list-inside text-sm  space-y-1">
               {essentialsData[meal].map((item, idx) => (
                 <li key={idx}>
                   {item.name} {item.dosage ? `– ${item.dosage}` : ""}
                 </li>
               ))}
             </ul>
-
           ) : (
             <p className="text-sm text-gray-500 ml-1">No essentials assigned.</p>
           )}
@@ -82,10 +96,8 @@ export default function ClientDashboard() {
     ));
   };
 
-
   const renderWorkoutSection = () => {
     const dayWiseWorkouts = clientData.assignedWorkoutPerDay || {};
-
     const sortedDays = workoutDaysOrder.filter(day => dayWiseWorkouts[day]);
 
     if (!sortedDays.length) return <p>No workout plan assigned.</p>;
@@ -120,40 +132,91 @@ export default function ClientDashboard() {
   if (!clientData) return <p className="text-center mt-10 text-xl">Loading client data...</p>;
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col items-center p-6">
-      <div className="w-full max-w-md flex justify-end mb-4">
+    <div className="min-h-screen bg-black text-white px-4 py-6">
+
+      {/* Logo centered */}
+      <div className="flex justify-center mb-6">
+        <img
+          src="/logo.png"
+          alt="Logo"
+          className="w-24 h-auto drop-shadow-lg"
+        />
+      </div>
+
+      {/* Logout button */}
+      <div className="w-full max-w-2xl mx-auto flex justify-end mb-4">
         <button
           onClick={handleLogout}
-          className="text-red-600 font-semibold hover:underline"
+          className="text-red-500 hover:underline font-medium"
         >
           Logout
         </button>
       </div>
 
-      <div className="bg-white p-6 rounded-xl shadow-xl w-full max-w-md mb-8">
-        <h2 className="text-2xl font-bold text-center mb-4">Welcome, {clientData.name}</h2>
-        <ul className="text-gray-800 space-y-2">
-          <li><strong>Email:</strong> {clientData.email}</li>
-          <li><strong>Phone:</strong> {clientData.phone}</li>
-          <li><strong>DOB:</strong> {clientData.dob}</li>
-          <li><strong>Gender:</strong> {clientData.gender}</li>
-          <li><strong>Height:</strong> {clientData.height} cm</li>
-          <li><strong>Weight:</strong> {clientData.weight} kg</li>
-          <li><strong>BMI:</strong> {calculateBMI()}</li>
-          <li><strong>Transformation:</strong> {clientData.transformationType}</li>
-          <li><strong>Food Preference:</strong> {clientData.foodPreference || "Not specified"}</li>
+      {/* Welcome Card */}
+      <div className="bg-[#111] p-6 rounded-2xl shadow-lg w-full max-w-2xl mx-auto mb-8 border border-gray-700">
+        <h2 className="text-3xl font-bold text-center text-blue-500 mb-5">
+          Welcome, {clientData.name}
+        </h2>
+        <h1 className="text-3xl font-bold text-center text-red-700 mb-5">{clientData.transformationName}</h1>
+        <ul className="space-y-2 text-sm">
+          <li><span className="text-gray-400">📧 Email:</span> {clientData.email}</li>
+          <li><span className="text-gray-400">📞 Phone:</span> {clientData.phone}</li>
+          <li><span className="text-gray-400">🎂 DOB:</span> {clientData.dob}</li>
+          <li><span className="text-gray-400">⚧ Gender:</span> {clientData.gender}</li>
+          <li><span className="text-gray-400">📏 Height:</span> {clientData.height} cm</li>
+          <li><span className="text-gray-400">⚖ Weight:</span> {clientData.weight} kg</li>
+          <li><span className="text-gray-400">📊 BMI:</span> {calculateBMI()}</li>
+          <li>
+            <span className="text-gray-400">🔥 Transformation:</span>{" "}
+            <span className="text-red-500 font-semibold">{clientData.transformationType}</span>
+          </li>
+          <li><span className="text-gray-400">🥗 Food Preference:</span> {clientData.dietType || "Not specified"}</li>
+
+          <h3 className="py-5">*Any changes to the above details should be reported to the trainer.</h3>
         </ul>
       </div>
 
-      <div className="bg-white p-5 rounded-xl shadow w-full max-w-md mb-6">
-        <h3 className="text-lg font-semibold mb-3">🍽️ Today's Food Plan</h3>
+      {/* Download Button */}
+      <div className="text-center mt-8 mb-8">
+        <button
+          onClick={() =>
+            generateDietPlanPdf(
+              clientData,
+              clientData.assignedFood || {},
+              clientData.assignedEssentials || {},
+              clientData.assignedWorkoutPerDay || {}
+            )
+          }
+          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full text-sm font-semibold shadow-md transition"
+        >
+          📄 Download My Full Plan (PDF)
+        </button>
+      </div>
+
+      <p className="text-center text-md  my-4">
+        Diet & Workout Plan For: <span className=" font-semibold">
+          {formatDate(clientData?.planDates?.from)} to {formatDate(clientData?.planDates?.to)}
+        </span>
+      </p>
+
+
+      {/* Food Plan */}
+      <div className="bg-[#111] p-6 rounded-2xl shadow-lg w-full max-w-2xl mx-auto mb-6 border border-gray-700">
+        <h3 className="text-xl font-semibold text-blue-400 mb-4">🍽️ Today's Food Plan</h3>
         {renderFoodSection()}
       </div>
 
-      <div className="bg-white p-5 rounded-xl shadow w-full max-w-md">
-        <h3 className="text-lg font-semibold mb-3">🏋️ Today's Workout Plan</h3>
+      {/* Workout Plan */}
+      <div className="bg-[#111] p-6 rounded-2xl shadow-lg w-full max-w-2xl mx-auto mb-6 border border-gray-700">
+        <h3 className="text-xl font-semibold text-blue-400 mb-4">🏋️ Today's Workout Plan</h3>
         {renderWorkoutSection()}
       </div>
+
+
     </div>
   );
+
+
+
 }

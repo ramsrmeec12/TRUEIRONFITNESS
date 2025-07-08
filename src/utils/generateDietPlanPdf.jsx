@@ -1,31 +1,27 @@
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 
-export function generateDietPlanPdf(client, food, essentials, workoutPerDay) {
+export function generateDietPlanPdf(client, food, essentials, workoutPerDay, planDatesFromDB) {
   if (!client || !client.name) {
     alert("Missing client data");
     return;
   }
 
-  const transformationName = prompt("Enter Transformation Name (e.g. 100 Days Challenge):");
-  const startDate = prompt("Enter Start Date (YYYY-MM-DD):");
-  const endDate = prompt("Enter End Date (YYYY-MM-DD):");
-  if (!transformationName || !startDate || !endDate) {
-    alert("Please fill in all transformation details");
-    return;
-  }
-
+  const transformationName = client.transformationName || "Custom Transformation";
+  const startDate = client.planDates?.from || planDatesFromDB?.from || "Not specified";
+  const endDate = client.planDates?.to || planDatesFromDB?.to || "Not specified";
   const duration = `${startDate} to ${endDate}`;
+
   const pdf = new jsPDF();
   const pageWidth = pdf.internal.pageSize.getWidth();
   const pageHeight = pdf.internal.pageSize.getHeight();
 
-  // ✅ Calculate BMI
+  // ✅ BMI
   const bmi = client.weight && client.height
     ? (client.weight / Math.pow(client.height / 100, 2)).toFixed(1)
     : "-";
 
-  // ✅ Calculate Age from DOB
+  // ✅ Age
   const calculateAge = (dobStr) => {
     const dob = new Date(dobStr);
     const today = new Date();
@@ -36,7 +32,6 @@ export function generateDietPlanPdf(client, food, essentials, workoutPerDay) {
     }
     return age;
   };
-
   const age = client.dob ? calculateAge(client.dob) : "-";
 
   const watermark = new Image();
@@ -161,7 +156,6 @@ export function generateDietPlanPdf(client, food, essentials, workoutPerDay) {
             20,
             y2
           );
-
           y2 += 10;
         }
       });
