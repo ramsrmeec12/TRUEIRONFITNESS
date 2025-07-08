@@ -2,8 +2,6 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react"
 import { generateDietPlanPdf } from "../utils/generateDietPlanPdf";
 
-
-
 import {
   doc,
   getDoc,
@@ -26,11 +24,6 @@ export default function ClientProfile() {
   const [assignedWorkoutsPerDay, setAssignedWorkoutsPerDay] = useState({});
   const [workoutOptionsMap, setWorkoutOptionsMap] = useState({});
   const [planDates, setPlanDates] = useState({ from: "", to: "" });
-
-
-
-
-
 
   const meals = [
     "Empty Stomach",
@@ -119,6 +112,9 @@ export default function ClientProfile() {
 
     fetchData();
   }, [id]);
+
+
+
 
   const getActiveDays = () => {
     if (!client?.createdAt) return "-";
@@ -279,10 +275,14 @@ export default function ClientProfile() {
             <select
               onChange={(e) => handleSelectFood(meal, e.target.value)}
               className="w-full mb-3 border p-2 rounded"
-              defaultValue=""
+              value="" // force reset after each selection if needed
             >
-              <option value="" disabled>➕ Add Food to {meal}</option>
+              <option value="" hidden>➕ Add Food to {meal}</option>
               {[...foodItems]
+                .filter(food => {
+                  const assigned = assignedFood[meal] || [];
+                  return !assigned.some(f => f.id.toString() === food.id.toString());
+                })
                 .sort((a, b) => a.name.localeCompare(b.name))
                 .map(food => (
                   <option key={food.id} value={food.id}>
@@ -290,8 +290,6 @@ export default function ClientProfile() {
                   </option>
                 ))}
             </select>
-
-
 
 
             {/* Food list */}

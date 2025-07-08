@@ -144,15 +144,18 @@ export function generateDietPlanPdf(client, food, essentials, workoutPerDay, pla
         }
         pdf.setFont("helvetica", "italic");
         pdf.setFontSize(11);
-        pdf.text(
-          `Essentials: ${mealEssentials
-            .map(item =>
-              typeof item === "object" && item.name
-                ? `${item.name}${item.dosage ? ` (${item.dosage})` : ""}`
-                : item).join(", ")}`,
-          20,
-          currentY
-        );
+        const essentialsText = `Essentials: ${mealEssentials
+          .map(item =>
+            typeof item === "object" && item.name
+              ? `${item.name}${item.dosage ? ` (${item.dosage})` : ""}`
+              : item
+          )
+          .join(", ")}`;
+
+        const wrappedText = pdf.splitTextToSize(essentialsText, pageWidth - 40); // 40 = padding (20 on each side)
+        pdf.text(wrappedText, 20, currentY);
+        currentY += wrappedText.length * 6; // Adjust based on line height (6 is a safe estimate)
+
         currentY += 10;
       }
     });
