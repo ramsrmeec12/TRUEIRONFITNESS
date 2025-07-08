@@ -55,9 +55,11 @@ export default function ClientDashboard() {
   };
 
   function formatDate(isoString) {
+    if (!isoString) return "-";
     const [year, month, day] = isoString.split("-");
     return `${day}-${month}-${year}`;
   }
+
 
 
   const renderFoodSection = () => {
@@ -195,10 +197,13 @@ export default function ClientDashboard() {
       </div>
 
       <p className="text-center text-md  my-4">
-        Diet & Workout Plan For: <span className=" font-semibold">
+        Diet & Workout Plan For:{" "}
+        <span className=" font-semibold">
           {formatDate(clientData?.planDates?.from)} to {formatDate(clientData?.planDates?.to)}
         </span>
       </p>
+
+
 
 
       {/* Food Plan */}
