@@ -16,7 +16,30 @@ function useQuery() {
 
 export default function ClientDashboard() {
   const [clientData, setClientData] = useState(null);
-  const mealOrder = ["Breakfast", "Lunch", "Dinner"];
+  const meals = [
+    "Empty Stomach",
+    "Early Morning (6:30–7:00 AM)",
+    "Breakfast ",
+    "Mid Morning (11:00 AM)",
+    "Lunch",
+    "Afternoon (12:30–1:00 PM)",
+    "Evening",
+    "Late Evening",
+    "Post Workout",
+    "Dinner",
+    "Night",
+    "30 min Before Bed"
+  ];
+
+  const foodData = clientData?.assignedFood || {};
+  const essentialsData = clientData?.assignedEssentials || {};
+
+  const mealOrder = meals.filter(
+    meal =>
+      (foodData[meal] && foodData[meal].length > 0) ||
+      (essentialsData[meal] && essentialsData[meal].length > 0)
+  );
+
   const workoutDaysOrder = ["Day 1", "Day 2", "Day 3", "Day 4", "Day 5", "Day 6"];
   const queryParams = useQuery();
   const email = queryParams.get("email");
@@ -63,9 +86,14 @@ export default function ClientDashboard() {
 
 
   const renderFoodSection = () => {
-    const foodData = clientData.assignedFood || {};
-    const essentialsData = clientData.assignedEssentials || {};
-    const meals = mealOrder.filter(meal => foodData[meal]);
+    const foodData = clientData?.assignedFood || {};
+    const essentialsData = clientData?.assignedEssentials || {};
+    const meals = mealOrder.filter(meal =>
+      (foodData[meal] && foodData[meal].length > 0) ||
+      (essentialsData[meal] && essentialsData[meal].length > 0)
+    );
+
+
 
     if (meals.length === 0) return <p>No food plan assigned.</p>;
 
@@ -83,7 +111,7 @@ export default function ClientDashboard() {
         <div className="ml-4">
           <strong className="block text-sm  mb-1">Essentials:</strong>
           {(essentialsData[meal]?.length > 0) ? (
-            <ul className="list-disc list-inside text-sm  space-y-1">
+            <ul className="list-disc list-inside text-sm  space-y-1 pl-4">
               {essentialsData[meal].map((item, idx) => (
                 <li key={idx}>
                   {item.name} {item.dosage ? `– ${item.dosage}` : ""}
@@ -112,12 +140,34 @@ export default function ClientDashboard() {
         <div key={idx} className="mb-4">
           <h4 className="font-semibold text-indigo-700 mb-2">{day}</h4>
           <ul className="ml-4 space-y-2 text-sm">
-            {workouts.map((w, i) => (
-              <li key={i}>
-                {w.name} ({w.sets || 3}x{w.reps || 10})
-              </li>
-            ))}
+            {workouts.map((w, i) => {
+              const hasBreakdown = w.setBreakdown && Object.values(w.setBreakdown).some(val => typeof val === "object" && val.sets > 0);
+              return (
+                <li key={i} className="mb-2">
+                  <div className="font-medium">{w.name}</div>
+                  {hasBreakdown ? (
+                    <ul className="ml-4 text-gray-300 pl-4 text-sm list-disc">
+                      {["warmup", "working", "failure", "drop"].map((type) => {
+                        const breakdown = w.setBreakdown?.[type];
+                        if (breakdown?.sets > 0) {
+                          return (
+                            <li key={type}>
+                              {type}: {breakdown.sets} x {breakdown.reps}
+                            </li>
+                          );
+                        }
+                        return null;
+                      })}
+                    </ul>
+                  ) : (
+                    <div className="ml-4 text-sm text-gray-400"> Sets: {w.sets || 3} Reps: {w.reps || 10}</div>
+                  )}
+
+                </li>
+              );
+            })}
           </ul>
+
         </div>
       );
     });
@@ -187,7 +237,8 @@ export default function ClientDashboard() {
               clientData,
               clientData.assignedFood || {},
               clientData.assignedEssentials || {},
-              clientData.assignedWorkoutPerDay || {}
+              clientData.assignedWorkoutPerDay || {},
+              clientData.planDates || {},
             )
           }
           className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full text-sm font-semibold shadow-md transition"

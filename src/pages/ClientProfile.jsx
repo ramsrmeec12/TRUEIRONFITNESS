@@ -32,7 +32,21 @@ export default function ClientProfile() {
 
 
 
-  const meals = ["Breakfast", "Lunch", "Dinner"];
+  const meals = [
+    "Empty Stomach",
+    "Early Morning (6:30–7:00 AM)",
+    "Breakfast ",
+    "Mid Morning (11:00 AM)",
+    "Lunch",
+    "Afternoon (12:30–1:00 PM)",
+    "Evening",
+    "Late Evening",
+    "Post Workout",
+    "Dinner",
+    "Night",
+    "30 min Before Bed"
+  ];
+
   const muscleGroups = ["chest", "back", "shoulders", "legs", "arms", "core"];
 
   useEffect(() => {
@@ -41,7 +55,7 @@ export default function ClientProfile() {
       const clientData = clientSnap.data();
       setClient(clientData);
 
-      
+
 
 
 
@@ -52,13 +66,23 @@ export default function ClientProfile() {
 
       // Load assigned food
       if (clientData.assignedFood) {
-        setAssignedFood(clientData.assignedFood);
+        const initial = {};
+        meals.forEach(meal => {
+          initial[meal] = clientData.assignedFood[meal] || [];
+        });
+        setAssignedFood(initial);
       }
+
 
       // Load assigned essentials
       if (clientData.assignedEssentials) {
-        setAssignedEssentials(clientData.assignedEssentials);
+        const initial = {};
+        meals.forEach(meal => {
+          initial[meal] = clientData.assignedEssentials[meal] || [];
+        });
+        setAssignedEssentials(initial);
       }
+
 
       // Load assigned workouts per day
       if (clientData.assignedWorkoutPerDay) {
@@ -95,15 +119,15 @@ export default function ClientProfile() {
 
     fetchData();
   }, [id]);
-  
+
   const getActiveDays = () => {
-        if (!client?.createdAt) return "-";
-        const createdDate = client.createdAt.toDate(); // convert Firestore Timestamp to JS Date
-        const today = new Date();
-        const diffTime = today - createdDate;
-        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)); // convert ms to days
-        return diffDays;
-      };
+    if (!client?.createdAt) return "-";
+    const createdDate = client.createdAt.toDate(); // convert Firestore Timestamp to JS Date
+    const today = new Date();
+    const diffTime = today - createdDate;
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)); // convert ms to days
+    return diffDays;
+  };
 
   const fetchWorkoutsByMuscle = async (muscle) => {
     if (!muscle) return [];
@@ -149,6 +173,29 @@ export default function ClientProfile() {
     });
     alert("✅ Plan saved!");
   };
+
+  const calculateMealMacros = (meal) => {
+    const items = assignedFood[meal] || [];
+    let total = { calories: 0, protein: 0, carbs: 0, fat: 0 };
+
+    items.forEach(item => {
+      const grams = item.grams || 0;
+      const factor = grams / 100;
+
+      total.calories += (item.calories || 0) * factor;
+      total.protein += (item.protein || 0) * factor;
+      total.carbs += (item.carbs || 0) * factor;
+      total.fat += (item.fat || 0) * factor;
+    });
+
+    return {
+      calories: total.calories.toFixed(0),
+      protein: total.protein.toFixed(1),
+      carbs: total.carbs.toFixed(1),
+      fat: total.fat.toFixed(1),
+    };
+  };
+
 
 
 
@@ -243,6 +290,8 @@ export default function ClientProfile() {
                   </option>
                 ))}
             </select>
+
+
 
 
             {/* Food list */}
@@ -342,6 +391,19 @@ export default function ClientProfile() {
                 ))}
             </select>
 
+            {/* Macros Summary */}
+            {(assignedFood[meal] || []).length > 0 && (
+              <div className="text-sm mb-2 mt-2 text-gray-700">
+                {(() => {
+                  const { calories, protein, carbs, fat } = calculateMealMacros(meal);
+                  return (
+                    <p>
+                      <strong>Meal Total:</strong> {calories} kcal | Protein: {protein}g | Carbs: {carbs}g | Fat: {fat}g
+                    </p>
+                  );
+                })()}
+              </div>
+            )}
           </div>
         ))}
       </div>
@@ -363,7 +425,19 @@ export default function ClientProfile() {
                 ...prev,
                 [day]: exists
                   ? current.filter(item => item.id !== w.id)
-                  : [...current, { ...w, sets: 3, reps: 10, muscle: selectedMuscle }]
+                  : [...current, {
+                    ...w,
+                    sets: 0,
+                    reps: 0,
+                    muscle: selectedMuscle,
+                    setBreakdown: {
+                      warmup: { sets: 0, reps: 0 },
+                      working: { sets: 0, reps: 0 },
+                      failure: { sets: 0, reps: 0 },
+                      drop: { sets: 0, reps: 0 }
+                    }
+                  }]
+
               };
             });
           };
@@ -441,21 +515,98 @@ export default function ClientProfile() {
               {assignedWorkouts.length > 0 && (
                 <div className="bg-slate-100 p-3 rounded">
                   <h5 className="text-md font-bold mb-2 text-indigo-700">Assigned Workouts</h5>
-                  <ul className="space-y-2 text-sm">
+                  <ul className="space-y-4 text-sm">
                     {assignedWorkouts.map((w, i) => (
-                      <li key={w.id} className="flex justify-between items-center">
-                        <span>
-                          {w.name} – {w.sets || 3} x {w.reps || 10} reps
-                        </span>
-                        <button
-                          onClick={() => handleToggle(w)}
-                          className="text-red-500 text-sm"
-                        >❌</button>
+                      <li key={w.id} className="border rounded p-3 bg-white shadow-sm">
+                        <div className="flex justify-between items-center mb-2">
+                          <span className="font-medium text-gray-800">
+                            {w.name} – Total Sets: {w.sets || 0} x {w.reps || 10}
+                          </span>
+                          <button
+                            onClick={() => handleToggle(w)}
+                            className="text-red-500 text-sm"
+                          >
+                            ❌
+                          </button>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-2 text-sm text-gray-700">
+                          {["warmup", "working", "failure", "drop"].map((type) => (
+                            <div key={type} className="flex flex-col">
+                              <label className="capitalize mb-1">{type}</label>
+                              <div className="flex items-center gap-2">
+                                <input
+                                  type="number"
+                                  value={w.setBreakdown?.[type]?.sets || 0}
+                                  onChange={(e) => {
+                                    const newSets = parseInt(e.target.value) || 0;
+                                    const updated = assignedWorkouts.map((item) => {
+                                      if (item.id === w.id) {
+                                        const newBreakdown = {
+                                          ...item.setBreakdown,
+                                          [type]: {
+                                            ...item.setBreakdown?.[type],
+                                            sets: newSets
+                                          }
+                                        };
+                                        const totalSets = Object.values(newBreakdown).reduce(
+                                          (sum, val) => sum + (val.sets || 0),
+                                          0
+                                        );
+                                        return {
+                                          ...item,
+                                          setBreakdown: newBreakdown,
+                                          sets: totalSets
+                                        };
+                                      }
+                                      return item;
+                                    });
+                                    setAssignedWorkoutsPerDay((prev) => ({ ...prev, [day]: updated }));
+                                  }}
+                                  className="border p-1 rounded w-20"
+                                  min="0"
+                                />
+                                <span>x</span>
+                                <input
+                                  type="number"
+                                  value={w.setBreakdown?.[type]?.reps || 0}
+                                  onChange={(e) => {
+                                    const newReps = parseInt(e.target.value) || 0;
+                                    const updated = assignedWorkouts.map((item) => {
+                                      if (item.id === w.id) {
+                                        return {
+                                          ...item,
+                                          setBreakdown: {
+                                            ...item.setBreakdown,
+                                            [type]: {
+                                              ...item.setBreakdown?.[type],
+                                              reps: newReps
+                                            }
+                                          }
+                                        };
+                                      }
+                                      return item;
+                                    });
+                                    setAssignedWorkoutsPerDay((prev) => ({ ...prev, [day]: updated }));
+                                  }}
+                                  className="border p-1 rounded w-20"
+                                  min="0"
+                                />
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+
+
+                        <div className="text-xs text-gray-500 mt-1">
+                          Breakdown must sum to total sets: <strong>{w.sets}</strong>
+                        </div>
                       </li>
                     ))}
                   </ul>
                 </div>
               )}
+
             </div>
           );
         })}
