@@ -118,47 +118,56 @@ export function generateDietPlanPdf(client, food, essentials, workoutPerDay, pla
       const items = food[meal] || [];
       const mealEssentials = essentials[meal] || [];
 
-      if (items.length > 0) {
+      if (items.length > 0 || mealEssentials.length > 0) {
+        // Draw the table header and food items (or dash if no food)
         autoTable(pdf, {
           startY: currentY,
           head: [[meal, "Food Item", "Grams", "Calories"]],
-          body: items.map(f => [
-            meal,
-            f.name,
-            `${f.grams}g`,
-            `${(f.calories * (f.grams / 100)).toFixed(0)} kcal`
-          ]),
+          body:
+            items.length > 0
+              ? items.map(f => [
+                meal,
+                f.name,
+                `${f.grams}g`,
+                `${(f.calories * (f.grams / 100)).toFixed(0)} kcal`,
+              ])
+              : [[meal, "–", "–", "–"]],
           styles: { fontSize: 11 },
           headStyles: {
             fillColor: [200, 0, 0],
-            textColor: [255, 255, 255]
-          }
+            textColor: [255, 255, 255],
+          },
         });
+
         currentY = pdf.lastAutoTable.finalY + 6;
-      }
 
-      if (mealEssentials.length > 0) {
-        if (currentY > 270) {
-          pdf.addPage();
-          currentY = 20;
+        // Show essentials only if present
+        if (mealEssentials.length > 0) {
+          if (currentY > 270) {
+            pdf.addPage();
+            currentY = 20;
+          }
+
+          pdf.setFont("helvetica", "italic");
+          pdf.setFontSize(11);
+
+          const essentialsText = `Essentials: ${mealEssentials
+            .map(item =>
+              typeof item === "object" && item.name
+                ? `${item.name}${item.dosage ? ` (${item.dosage})` : ""}`
+                : item
+            )
+            .join(", ")}`;
+
+          const wrapped = pdf.splitTextToSize(essentialsText, pageWidth - 40);
+          pdf.text(wrapped, 20, currentY);
+          currentY += wrapped.length * 6 + 6;
         }
-        pdf.setFont("helvetica", "italic");
-        pdf.setFontSize(11);
-        const essentialsText = `Essentials: ${mealEssentials
-          .map(item =>
-            typeof item === "object" && item.name
-              ? `${item.name}${item.dosage ? ` (${item.dosage})` : ""}`
-              : item
-          )
-          .join(", ")}`;
 
-        const wrappedText = pdf.splitTextToSize(essentialsText, pageWidth - 40); // 40 = padding (20 on each side)
-        pdf.text(wrappedText, 20, currentY);
-        currentY += wrappedText.length * 6; // Adjust based on line height (6 is a safe estimate)
-
-        currentY += 10;
+        currentY += 4;
       }
     });
+
 
     // --- WORKOUT SECTION ---
     pdf.addPage();
