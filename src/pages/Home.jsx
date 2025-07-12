@@ -6,7 +6,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-100 to-blue-300">
-      <h1 className="text-4xl font-bold mb-8 text-blue-900">Welcome to FitTrack</h1>
+      <h1 className="text-4xl font-bold mb-8 text-blue-900">Welcome to IRON LIFE GYM AND FITNESS</h1>
       <div className="flex gap-6">
         <button
           onClick={() => navigate("/client-login")}
