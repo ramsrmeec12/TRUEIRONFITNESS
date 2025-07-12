@@ -8,14 +8,14 @@ export function generateDietPlanPdf(client, food, essentials, workoutPerDay, pla
   }
 
   const MEAL_ORDER = [
-    "Empty Stomach",
+    "Empty Stomach or Pre Workout",
     "Early Morning (6:30–7:00 AM)",
-    "Breakfast ",
+    "Breakfast or Post Workout",
     "Mid Morning (11:00 AM)",
     "Lunch",
     "Afternoon (12:30–1:00 PM)",
     "Evening",
-    "Late Evening",
+    "Late Evening or Post Workout",
     "Post Workout",
     "Dinner",
     "Night",
